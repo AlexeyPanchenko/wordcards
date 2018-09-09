@@ -1,15 +1,17 @@
+import ru.alexeypan.wordcards.*
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-  compileSdkVersion 28
+  compileSdkVersion Versions.compileSdk
   defaultConfig {
-    applicationId "ru.alexeypan.wordcards"
-    minSdkVersion 15
-    targetSdkVersion 28
-    versionCode 1
-    versionName "1.0"
+    applicationId ApplicationId.id
+    minSdkVersion Versions.minSdk
+    targetSdkVersion Versions.targetSdk
+    versionCode Release.versionCode
+    versionName Release.versionName
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
