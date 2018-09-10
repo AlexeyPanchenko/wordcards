@@ -20,7 +20,6 @@ android:
   components:
     - tools
     - tools
-    - build-tools-27.0.3
     - android-$ANDROID_API
     #- sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
 
@@ -38,4 +37,4 @@ before_install:
   - yes | sdkmanager "platforms;android-$ANDROID_API"
 
 script:
-  - ./gradlew clean assembleTravis
+  - ./gradlew clean assembleTravis --stacktrace
