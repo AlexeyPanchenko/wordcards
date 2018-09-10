@@ -35,7 +35,7 @@ branches:
 #  - adb shell input keyevent 82 &
 
 before_install:
-  - yes | sdkmanager "platforms;android-28"
+  - yes | sdkmanager "platforms;android-$ANDROID_API"
 
 script:
-  - ./gradlew build assembleDebug
+  - ./gradlew build assembleTravis
