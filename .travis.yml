@@ -19,11 +19,8 @@ android:
   components:
     - tools
     - tools
-    - platform-tools
-    - android-$ANDROID_API
-    - extra-android-support
-    - extra-android-m2repository
-    - extra-google-m2repository
+    - build-tools-27.0.3
+    - android-27
     #- sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
 
 branches:
@@ -36,5 +33,8 @@ branches:
 #  - android-wait-for-emulator
 #  - adb shell input keyevent 82 &
 
+before_install:
+  - yes | sdkmanager "platforms;android-27"
+
 script:
-  - "./gradlew clean assembleDebug"
+  - ./gradlew build connectedCheck
