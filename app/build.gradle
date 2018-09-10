@@ -20,6 +20,38 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
+  signingConfigs {
+    debug {
+      storeFile rootProject.file('debug.keystore')
+      keyAlias 'androiddebugkey'
+      keyPassword 'android'
+      storePassword 'android'
+    }
+  }
+  buildTypes {
+    debug {
+      minifyEnabled false
+      versionNameSuffix "-dev"
+    }
+    travis.initWith(buildTypes.debug)
+    travis {
+      minifyEnabled true
+      shrinkResources true
+
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+      matchingFallbacks = ['debug', 'release']
+    }
+  }
+  lintOptions {
+    if (project.hasProperty('envTravis')) {
+      abortOnError false
+    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
 }
 
 dependencies {
