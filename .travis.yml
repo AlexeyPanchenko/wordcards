@@ -39,3 +39,4 @@ before_install:
 
 script:
   - ./gradlew clean assembleTravis --stacktrace
+  - ./gradlew test
