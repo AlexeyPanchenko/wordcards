@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards
+package ru.alexeypan.wordcards.app
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4

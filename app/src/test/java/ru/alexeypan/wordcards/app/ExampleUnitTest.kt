@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards
+package ru.alexeypan.wordcards.app
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
