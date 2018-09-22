@@ -1,1 +1,7 @@
-include ':app', ':buildSrc'
+include ':app', ':buildSrc', ':features-wordlist-impl'
+
+include ':features-wordlist-api'
+project(':features-wordlist-api').projectDir = new File(rootDir, 'features/features-wordlist-api')
+
+include ':features-wordlist-impl'
+project(':features-wordlist-impl').projectDir = new File(rootDir, 'features/features-wordlist-impl')
