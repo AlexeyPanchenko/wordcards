@@ -59,6 +59,7 @@ dependencies {
   implementation Libs.kotlin
   implementation project (Modules.wordlistApi)
   implementation project (Modules.wordlistImpl)
+  implementation project(Modules.coreUtils)
 
   implementation Libs.Androidx.appcompat
 

@@ -1,7 +1,10 @@
-include ':app', ':buildSrc', ':features-wordlist-impl'
+include ':app', ':buildSrc'
 
 include ':features-wordlist-api'
 project(':features-wordlist-api').projectDir = new File(rootDir, 'features/features-wordlist-api')
 
 include ':features-wordlist-impl'
 project(':features-wordlist-impl').projectDir = new File(rootDir, 'features/features-wordlist-impl')
+
+include ':core-utils'
+project(':core-utils').projectDir = new File(rootDir, 'core/core-utils')

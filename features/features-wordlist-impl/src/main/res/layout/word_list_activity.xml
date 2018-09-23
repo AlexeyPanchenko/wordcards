@@ -11,7 +11,7 @@
     android:layout_height="wrap_content"
     android:theme="@style/Widget.MaterialComponents.BottomAppBar"
     android:layout_gravity="bottom"
-    app:backgroundTint="#3F51B5"
+    app:backgroundTint="@color/colorPrimary"
     app:hideOnScroll="true"
     app:fabAlignmentMode="center"
     app:navigationIcon="@drawable/ic_hamburger" />

@@ -7,6 +7,7 @@ class ApplicationId {
 class Modules {
   static final String wordlistApi = ":features-wordlist-api"
   static final String wordlistImpl = ":features-wordlist-impl"
+  static final String coreUtils = ":core-utils"
 }
 
 class Release {
