@@ -30,8 +30,12 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   implementation Libs.kotlin
+  implementation Libs.Androidx.annotations
+  implementation Libs.Androidx.appcompat
+  implementation Libs.Androidx.recyclerView
+  implementation Libs.Androidx.constraintLayout
+  implementation Libs.material
 
-  implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
   testImplementation 'junit:junit:4.12'
   androidTestImplementation 'com.android.support.test:runner:1.0.2'
   androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
