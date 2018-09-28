@@ -40,3 +40,8 @@ before_install:
 script:
   - ./gradlew clean assembleTravis --stacktrace
   - ./gradlew test
+  - sonar-scanner
+
+addons:
+  sonarcloud:
+    organization: "alexeypanchenko-github"
