@@ -38,9 +38,9 @@ before_install:
   - yes | sdkmanager "platforms;android-$ANDROID_API"
 
 script:
+  - sonar-scanner
   - ./gradlew clean assembleTravis --stacktrace
   - ./gradlew test
-  - sonar-scanner
 
 addons:
   sonarcloud:
