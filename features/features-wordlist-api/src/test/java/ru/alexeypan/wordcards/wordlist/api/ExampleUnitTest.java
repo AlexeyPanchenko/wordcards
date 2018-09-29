@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.wordlist_api.api;
+package ru.alexeypan.wordcards.wordlist.api;
 
 import org.junit.Test;
 
