@@ -10,8 +10,8 @@ android {
     applicationId ApplicationId.id
     minSdkVersion Versions.minSdk
     targetSdkVersion Versions.targetSdk
-    versionCode Release.versionCode
-    versionName Release.versionName
+    versionCode=VERSION_CODE
+    versionName=VERSION_NAME
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
   }
   buildTypes {
