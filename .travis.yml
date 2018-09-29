@@ -45,3 +45,4 @@ script:
 addons:
   sonarcloud:
     organization: "alexeypanchenko-github"
+    token: $SONAR_TOKEN
