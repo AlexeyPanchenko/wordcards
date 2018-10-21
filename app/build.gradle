@@ -19,6 +19,13 @@ android {
     }
   }
   signingConfigs {
+    // fixme: change release configuration
+    release {
+      storeFile rootProject.file('debug.keystore')
+      keyAlias 'androiddebugkey'
+      keyPassword 'android'
+      storePassword 'android'
+    }
     debug {
       storeFile rootProject.file('debug.keystore')
       keyAlias 'androiddebugkey'
@@ -27,9 +34,17 @@ android {
     }
   }
   buildTypes {
+    release {
+      minifyEnabled true
+      shrinkResources true
+
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.release
+    }
     debug {
       minifyEnabled false
       versionNameSuffix "-dev"
+      signingConfig signingConfigs.debug
     }
     travis.initWith(buildTypes.debug)
     travis {
