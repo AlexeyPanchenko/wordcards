@@ -1,4 +1,4 @@
-package ru.alexeypan.mwordcards.utils;
+package ru.alexeypan.wordcards.utils;
 
 import org.junit.Test;
 

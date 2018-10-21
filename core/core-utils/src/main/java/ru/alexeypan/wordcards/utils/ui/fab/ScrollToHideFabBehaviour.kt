@@ -1,4 +1,4 @@
-package ru.alexeypan.mwordcards.utils.ui.fab
+package ru.alexeypan.wordcards.utils.ui.fab
 
 import android.content.Context
 import android.util.AttributeSet

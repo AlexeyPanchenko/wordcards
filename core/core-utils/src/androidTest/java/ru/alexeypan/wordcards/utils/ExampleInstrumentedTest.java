@@ -1,4 +1,4 @@
-package ru.alexeypan.mwordcards.utils;
+package ru.alexeypan.wordcards.utils;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     // Context of the app under test.
     Context appContext = InstrumentationRegistry.getTargetContext();
 
-    assertEquals("ru.alexeypan.mwordcards.utils.test", appContext.getPackageName());
+    assertEquals("ru.alexeypan.wordcards.utils.test", appContext.getPackageName());
   }
 }
