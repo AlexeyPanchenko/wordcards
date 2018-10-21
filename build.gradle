@@ -1,13 +1,14 @@
-import ru.alexeypan.wordcards.*
-
 buildscript {
+
+  apply from: rootProject.file('dependencies.gradle')
+
   repositories {
     google()
     jcenter()
   }
   dependencies {
-    classpath Libs.androidPlugin
-    classpath Libs.kotlinPlugin
+    classpath deps.androidPlugin
+    classpath deps.kotlin.plugin
   }
 }
 
