@@ -30,6 +30,7 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   implementation project(Modules.coreUtils)
+  implementation project(Modules.wordlistApi)
 
   implementation Libs.kotlin
   implementation Libs.Androidx.annotations
