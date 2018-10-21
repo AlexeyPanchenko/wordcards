@@ -1,15 +1,13 @@
-import ru.alexeypan.wordcards.*
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-  compileSdkVersion Versions.compileSdk
+  compileSdkVersion versions.compileSdk
   defaultConfig {
-    applicationId ApplicationId.id
-    minSdkVersion Versions.minSdk
-    targetSdkVersion Versions.targetSdk
+    applicationId APPLICATION_ID
+    minSdkVersion versions.minSdk
+    targetSdkVersion versions.targetSdk
     versionCode=VERSION_CODE
     versionName=VERSION_NAME
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -21,6 +19,13 @@ android {
     }
   }
   signingConfigs {
+    // fixme: change release configuration
+    release {
+      storeFile rootProject.file('debug.keystore')
+      keyAlias 'androiddebugkey'
+      keyPassword 'android'
+      storePassword 'android'
+    }
     debug {
       storeFile rootProject.file('debug.keystore')
       keyAlias 'androiddebugkey'
@@ -29,9 +34,17 @@ android {
     }
   }
   buildTypes {
+    release {
+      minifyEnabled true
+      shrinkResources true
+
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.release
+    }
     debug {
       minifyEnabled false
       versionNameSuffix "-dev"
+      signingConfig signingConfigs.debug
     }
     travis.initWith(buildTypes.debug)
     travis {
@@ -56,14 +69,13 @@ android {
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
-  implementation Libs.kotlin
-  implementation project (Modules.wordlistApi)
-  implementation project (Modules.wordlistImpl)
-  implementation project(Modules.coreUtils)
+  implementation deps.kotlin.lib8
+  implementation project (deps.modules.wordlistApi)
+  implementation project (deps.modules.wordlistImpl)
+  implementation project(deps.modules.coreUtils)
 
-  implementation Libs.Androidx.appcompat
+  implementation deps.androidx.appcompat
 
-  testImplementation 'junit:junit:4.12'
-  androidTestImplementation 'com.android.support.test:runner:1.0.2'
-  androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+  testImplementation deps.test.junit
+  androidTestImplementation depsPack.androidTest
 }

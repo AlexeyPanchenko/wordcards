@@ -1,15 +1,13 @@
-import ru.alexeypan.wordcards.*
-
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-  compileSdkVersion Versions.compileSdk
+  compileSdkVersion versions.compileSdk
 
   defaultConfig {
-    minSdkVersion Versions.minSdk
-    targetSdkVersion Versions.targetSdk
+    minSdkVersion versions.minSdk
+    targetSdkVersion versions.targetSdk
     versionCode=VERSION_CODE
     versionName=VERSION_NAME
 
@@ -29,11 +27,10 @@ android {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-  implementation Libs.kotlin
-  implementation Libs.Androidx.appcompat
-  implementation Libs.material
+  implementation deps.kotlin.lib8
+  implementation deps.androidx.appcompat
+  implementation deps.androidMaterial
 
-  testImplementation 'junit:junit:4.12'
-  androidTestImplementation 'com.android.support.test:runner:1.0.2'
-  androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+  testImplementation deps.test.junit
+  androidTestImplementation depsPack.androidTest
 }
