@@ -38,5 +38,12 @@ before_install:
   - yes | sdkmanager "platforms;android-$ANDROID_API"
 
 script:
+  - sonar-scanner
   - ./gradlew clean assembleTravis --stacktrace
   - ./gradlew test
+
+addons:
+  sonarcloud:
+    organization: "alexeypanchenko-github"
+    token:
+      secure: ${SONAR_TOKEN}
