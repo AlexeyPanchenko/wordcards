@@ -54,7 +54,7 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       signingConfig signingConfigs.release
 
-      matchingFallbacks = ['debug']
+      matchingFallbacks = ['release']
     }
   }
   lintOptions {
