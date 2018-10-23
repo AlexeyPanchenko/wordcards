@@ -46,14 +46,15 @@ android {
       versionNameSuffix "-dev"
       signingConfig signingConfigs.debug
     }
-    travis.initWith(buildTypes.debug)
     travis {
+      initWith debug
       minifyEnabled true
       shrinkResources true
 
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+      signingConfig signingConfigs.release
 
-      matchingFallbacks = ['debug', 'release']
+      matchingFallbacks = ['debug']
     }
   }
   lintOptions {
@@ -70,8 +71,8 @@ android {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   implementation deps.kotlin.lib8
-  implementation project (deps.modules.wordlistApi)
-  implementation project (deps.modules.wordlistImpl)
+  implementation project(deps.modules.wordlistApi)
+  implementation project(deps.modules.wordlistImpl)
   implementation project(deps.modules.coreUtils)
 
   implementation deps.androidx.appcompat
