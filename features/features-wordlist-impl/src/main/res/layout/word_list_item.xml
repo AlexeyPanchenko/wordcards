@@ -1,20 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-  android:layout_width="match_parent"
-  android:layout_height="50dp"
+<com.google.android.material.card.MaterialCardView
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:background="@color/colorPrimaryLight"
-  app:cardCornerRadius="4dp"
-  app:cardPreventCornerOverlap="true"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
   android:layout_gravity="center"
+  android:background="@android:color/black"
+  app:cardBackgroundColor="@android:color/black"
+  app:cardCornerRadius="4dp"
+  app:cardElevation="2dp"
+  app:cardPreventCornerOverlap="true"
   app:cardUseCompatPadding="true"
-  app:cardElevation="2dp">
+  >
 
   <TextView
-    tools:text="Слово на русском"
-    android:layout_gravity="center"
+    android:id="@+id/tvWord"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:textColor="@android:color/white"
+    tools:text="Слово на русском"
+    />
 
 </com.google.android.material.card.MaterialCardView>
