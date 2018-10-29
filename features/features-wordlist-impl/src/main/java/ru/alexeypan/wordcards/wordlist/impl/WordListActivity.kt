@@ -16,7 +16,13 @@ class WordListActivity : AppCompatActivity() {
     snapHelper.attachToRecyclerView(rvList)
     val adapter = WordsAdapter()
     rvList.adapter = adapter
-    adapter.setItems(listOf("First", "asdsa kjasdbkjsdas d as", "123fdfsd", "sddasd", "!WSWEFSAFSAKJFNSJKFN SAF NASL NSA", "sadas"))
+    adapter.setItems(listOf(
+      Word("Original1", "Translate1"),
+      Word("Original2", "Translate2"),
+      Word("Original3", "Translate3"),
+      Word("Original4", "Translate4"),
+      Word("Original5", "Translate5")
+    ))
 
   }
 }

@@ -6,8 +6,11 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:layout_gravity="center"
-  android:background="@android:color/black"
-  app:cardBackgroundColor="@android:color/black"
+  android:layout_marginTop="16dp"
+  android:layout_marginBottom="16dp"
+  android:layout_marginLeft="8dp"
+  android:layout_marginRight="8dp"
+  app:cardBackgroundColor="@color/colorPrimaryLight"
   app:cardCornerRadius="4dp"
   app:cardElevation="2dp"
   app:cardPreventCornerOverlap="true"
@@ -15,12 +18,21 @@
   >
 
   <TextView
-    android:id="@+id/tvWord"
+    android:id="@+id/tvWordOriginal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:textColor="@android:color/white"
-    tools:text="Слово на русском"
+    android:textColor="@android:color/holo_red_dark"
+    tools:text="Original"
+    />
+
+  <TextView
+    android:id="@+id/tvWordTranslate"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|center"
+    android:textColor="@android:color/holo_red_dark"
+    tools:text="Translate"
     />
 
 </com.google.android.material.card.MaterialCardView>

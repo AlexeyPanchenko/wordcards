@@ -8,9 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 
 class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
 
-  private val words = arrayListOf<String>()
+  private val words = arrayListOf<Word>()
 
-  fun setItems(list: List<String>) {
+  fun setItems(list: List<Word>) {
     words.clear()
     words.addAll(list)
     notifyDataSetChanged()
@@ -21,7 +21,8 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
   }
 
   override fun onBindViewHolder(holder: WordHolder, position: Int) {
-    holder.tvWord.text = words[position]
+    holder.original.text = words[position].original
+    holder.translate.text = words[position].translate
   }
 
   override fun getItemCount(): Int {
@@ -30,6 +31,6 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
 }
 
 class WordHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-  val tvWord: TextView = itemView.findViewById(R.id.tvWord)
+  val original: TextView = itemView.findViewById(R.id.tvWordOriginal)
+  val translate: TextView = itemView.findViewById(R.id.tvWordTranslate)
 }
