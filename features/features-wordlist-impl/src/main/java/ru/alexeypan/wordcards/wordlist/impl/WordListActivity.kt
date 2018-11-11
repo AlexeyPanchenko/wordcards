@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.word_list_activity.*
 
 class WordListActivity : AppCompatActivity() {
@@ -11,7 +12,7 @@ class WordListActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.word_list_activity)
-    rvList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+    rvList.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
     val snapHelper = PagerSnapHelper()
     snapHelper.attachToRecyclerView(rvList)
     val adapter = WordsAdapter()
@@ -23,6 +24,5 @@ class WordListActivity : AppCompatActivity() {
       Word("Original4", "Translate4"),
       Word("Original5", "Translate5")
     ))
-
   }
 }

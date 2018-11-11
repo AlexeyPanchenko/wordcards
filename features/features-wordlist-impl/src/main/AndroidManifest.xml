@@ -1,12 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="ru.alexeypan.wordcards.wordlist.impl">
+<manifest package="ru.alexeypan.wordcards.wordlist.impl">
 
-  <application>
-    <activity android:name=".WordListActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity>
-  </application>
 </manifest>
