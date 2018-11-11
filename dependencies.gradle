@@ -28,6 +28,8 @@ ext.deps = [
   'modules': [
     'wordlistApi'         : ":features-wordlist-api",
     'wordlistImpl'        : ":features-wordlist-impl",
+    'categoriesApi'       : ":features-categories-api",
+    'categoriesImpl'      : ":features-categories-impl",
     'coreUtils'           : ":core-utils",
   ],
   test: [

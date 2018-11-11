@@ -71,6 +71,9 @@ android {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   implementation deps.kotlin.lib8
+  implementation project(deps.modules.categoriesApi)
+  implementation project(deps.modules.categoriesImpl)
+  implementation project(deps.modules.wordlistImpl)
   implementation project(deps.modules.wordlistApi)
   implementation project(deps.modules.wordlistImpl)
   implementation project(deps.modules.coreUtils)

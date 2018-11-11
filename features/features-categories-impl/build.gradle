@@ -25,7 +25,15 @@ android {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+  implementation project(deps.modules.categoriesApi)
+  implementation project(deps.modules.coreUtils)
+
   implementation deps.kotlin.lib8
+  implementation deps.androidx.annotations
+  implementation deps.androidx.appcompat
+  implementation deps.androidx.recyclerView
+  implementation deps.androidx.constraintLayout
+  implementation deps.androidMaterial
 
   testImplementation deps.test.junit
   androidTestImplementation depsPack.androidTest
