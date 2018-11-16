@@ -31,6 +31,7 @@ ext.deps = [
     'categoriesApi'       : ":features-categories-api",
     'categoriesImpl'      : ":features-categories-impl",
     'coreUtils'           : ":core-utils",
+    'injector'            : ":injector",
   ],
   test: [
     'junit'               : "junit:junit:${versions.junit}",

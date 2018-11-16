@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.category_list.*
-
+import ru.alexeypan.wordcards.injector.Injector
 
 class CategoriesActivity : AppCompatActivity() {
 
@@ -18,19 +18,20 @@ class CategoriesActivity : AppCompatActivity() {
     val adapter = CategoriesAdapter()
     rvList.adapter = adapter
     adapter.setItems(listOf(
-      Category("Category1", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category2", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category3", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category4", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category5", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category6", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category7", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category8", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category9", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category10", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category11", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category12", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6")),
-      Category("Category13", listOf("Word1", "Word2", "Word3", "Word4", "Word5", "Word6"))
+      Category(1, "Category1"),
+      Category(2, "Category2"),
+      Category(3, "Category3"),
+      Category(4, "Category4"),
+      Category(5, "Category5"),
+      Category(6, "Category6"),
+      Category(7, "Category7"),
+      Category(8, "Category8"),
+      Category(9, "Category9"),
+      Category(10, "Category10"),
+      Category(11, "Category11"),
+      Category(12, "Category12"),
+      Category(13, "Category13")
     ))
+    adapter.setClickListener { Injector.wordListModule.getStarter(this).start(it.id) }
   }
 }

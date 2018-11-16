@@ -26,7 +26,9 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   implementation project(deps.modules.categoriesApi)
+  implementation project(deps.modules.wordlistApi)
   implementation project(deps.modules.coreUtils)
+  implementation project(deps.modules.injector)
 
   implementation deps.kotlin.lib8
   implementation deps.androidx.annotations
