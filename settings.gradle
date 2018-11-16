@@ -6,8 +6,8 @@ project(':features-wordlist-api').projectDir = new File(rootDir, 'features/featu
 include ':features-wordlist-impl'
 project(':features-wordlist-impl').projectDir = new File(rootDir, 'features/features-wordlist-impl')
 
-include ':core-utils'
-project(':core-utils').projectDir = new File(rootDir, 'core/core-utils')
+include ':core-ui'
+project(':core-ui').projectDir = new File(rootDir, 'core/core-ui')
 
 include ':features-categories-api'
 project(':features-categories-api').projectDir = new File(rootDir, 'features/features-categories-api')

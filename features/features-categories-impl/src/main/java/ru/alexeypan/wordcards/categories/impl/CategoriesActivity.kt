@@ -32,6 +32,6 @@ class CategoriesActivity : AppCompatActivity() {
       Category(12, "Category12"),
       Category(13, "Category13")
     ))
-    adapter.setClickListener { Injector.wordListModule.getStarter(this).start(it.id) }
+    adapter.setClickListener { Injector.wordListScope.wordListModule().getStarter(this).start(it.id) }
   }
 }

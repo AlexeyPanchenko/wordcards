@@ -30,7 +30,7 @@ ext.deps = [
     'wordlistImpl'        : ":features-wordlist-impl",
     'categoriesApi'       : ":features-categories-api",
     'categoriesImpl'      : ":features-categories-impl",
-    'coreUtils'           : ":core-utils",
+    'coreUI'              : ":core-ui",
     'injector'            : ":injector",
   ],
   test: [
