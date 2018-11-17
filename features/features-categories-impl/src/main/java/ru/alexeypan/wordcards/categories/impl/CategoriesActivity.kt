@@ -33,5 +33,9 @@ class CategoriesActivity : AppCompatActivity() {
       Category(13, "Category13")
     ))
     adapter.setClickListener { Injector.wordListScope.wordListModule().getStarter(this).start(it.id) }
+
+    fabAdd.setOnClickListener {
+      bottomBar.fabAlignmentMode = bottomBar.fabAlignmentMode.xor(1)
+    }
   }
 }
