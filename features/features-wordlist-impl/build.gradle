@@ -27,6 +27,7 @@ dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   implementation project(deps.modules.coreUI)
+  implementation project(deps.modules.coreDB)
   implementation project(deps.modules.wordlistApi)
 
   implementation deps.kotlin.lib8
@@ -35,6 +36,8 @@ dependencies {
   implementation deps.androidx.recyclerView
   implementation deps.androidx.constraintLayout
   implementation deps.androidMaterial
+
+  implementation deps.androidx.room.lib
 
   testImplementation deps.test.junit
   androidTestImplementation depsPack.androidTest

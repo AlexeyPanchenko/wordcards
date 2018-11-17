@@ -6,11 +6,14 @@ project(':features-wordlist-api').projectDir = new File(rootDir, 'features/featu
 include ':features-wordlist-impl'
 project(':features-wordlist-impl').projectDir = new File(rootDir, 'features/features-wordlist-impl')
 
-include ':core-ui'
-project(':core-ui').projectDir = new File(rootDir, 'core/core-ui')
-
 include ':features-categories-api'
 project(':features-categories-api').projectDir = new File(rootDir, 'features/features-categories-api')
 
 include ':features-categories-impl'
 project(':features-categories-impl').projectDir = new File(rootDir, 'features/features-categories-impl')
+
+include ':core-ui'
+project(':core-ui').projectDir = new File(rootDir, 'core/core-ui')
+
+include ':core-db'
+project(':core-db').projectDir = new File(rootDir, 'core/core-db')

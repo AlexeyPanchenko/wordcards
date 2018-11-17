@@ -16,6 +16,12 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
     notifyDataSetChanged()
   }
 
+  fun addItem(word: Word) {
+    val position: Int = words.size
+    words.add(word)
+    notifyItemInserted(position)
+  }
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordHolder {
     return WordHolder(LayoutInflater.from(parent.context).inflate(R.layout.word_list_item, parent, false))
   }

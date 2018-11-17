@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.word_list_activity.*
+import ru.alexeypan.wordcards.core.db.AppDatabase
+import ru.alexeypan.wordcards.core.db.words.WordDB
+import ru.alexeypan.wordcards.core.db.words.WordsDao
 
 class WordListActivity : AppCompatActivity() {
 
@@ -22,6 +25,8 @@ class WordListActivity : AppCompatActivity() {
     }
   }
 
+  lateinit var dao: WordsDao
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.word_list_activity)
@@ -30,13 +35,17 @@ class WordListActivity : AppCompatActivity() {
     snapHelper.attachToRecyclerView(rvList)
     val adapter = WordsAdapter()
     rvList.adapter = adapter
-    Toast.makeText(this, "ID = ${intent.getIntExtra(CATEGORY_ID, -1)}", Toast.LENGTH_SHORT).show()
-    adapter.setItems(listOf(
-      Word("Original1", "Translate1"),
-      Word("Original2", "Translate2"),
-      Word("Original3", "Translate3"),
-      Word("Original4", "Translate4"),
-      Word("Original5", "Translate5")
-    ))
+
+    val categoryId = intent.getIntExtra(CATEGORY_ID, -1)
+    dao = AppDatabase.getInstance(this.applicationContext)?.wordsDao()!!
+    dao.getAll(categoryId).forEach { adapter.addItem(Word(it.original, it.translate)) }
+    var c = 0
+    fabAdd.setOnClickListener {
+      c++
+      val wordDb = WordDB(categoryId, "Original=$c", "Translate=$c")
+      dao.save(wordDb)
+      adapter.addItem(Word(wordDb.original, wordDb.translate))
+    }
+    Toast.makeText(this, "ID = ${categoryId}", Toast.LENGTH_SHORT).show()
   }
 }
