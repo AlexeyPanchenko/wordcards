@@ -5,9 +5,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.category_list.*
+import ru.alexeypan.wordcards.categories.impl.db.CategoriesDB
+import ru.alexeypan.wordcards.categories.impl.db.CategoriesDao
+import ru.alexeypan.wordcards.categories.impl.db.CategoryDB
 import ru.alexeypan.wordcards.injector.Injector
 
 class CategoriesActivity : AppCompatActivity() {
+
+  lateinit var dao: CategoriesDao
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -17,25 +22,17 @@ class CategoriesActivity : AppCompatActivity() {
     rvList.layoutManager = LinearLayoutManager(this)
     val adapter = CategoriesAdapter()
     rvList.adapter = adapter
-    adapter.setItems(listOf(
-      Category(1, "Category1"),
-      Category(2, "Category2"),
-      Category(3, "Category3"),
-      Category(4, "Category4"),
-      Category(5, "Category5"),
-      Category(6, "Category6"),
-      Category(7, "Category7"),
-      Category(8, "Category8"),
-      Category(9, "Category9"),
-      Category(10, "Category10"),
-      Category(11, "Category11"),
-      Category(12, "Category12"),
-      Category(13, "Category13")
-    ))
+    dao = CategoriesDB.getInstance(this.applicationContext)?.categoriesDao()!!
+
+    dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
     adapter.setClickListener { Injector.wordListScope.wordListModule().getStarter(this).start(it.id) }
 
+    var c = 0
     fabAdd.setOnClickListener {
-      bottomBar.fabAlignmentMode = bottomBar.fabAlignmentMode.xor(1)
+      val categoryDB = CategoryDB(c++, "Title =")
+      dao.save(categoryDB)
+      val categoryDB2 = dao.get(categoryDB.id)
+      adapter.addItem(Category(categoryDB2.id, categoryDB2.title + categoryDB2.id))
     }
   }
 }
