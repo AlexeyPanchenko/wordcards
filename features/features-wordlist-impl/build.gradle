@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
 
 android {
   compileSdkVersion versions.compileSdk
@@ -27,8 +26,11 @@ android {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-  implementation project(deps.modules.coreUI)
   implementation project(deps.modules.wordlistApi)
+  implementation project(deps.modules.wordlistDB)
+  implementation project(deps.modules.coreUI)
+  implementation project(deps.modules.coreDB)
+  implementation project(deps.modules.injector)
 
   implementation deps.kotlin.lib8
   implementation deps.androidx.annotations
@@ -36,9 +38,6 @@ dependencies {
   implementation deps.androidx.recyclerView
   implementation deps.androidx.constraintLayout
   implementation deps.androidMaterial
-
-  implementation deps.androidx.room.lib
-  kapt deps.androidx.room.processor
 
   testImplementation deps.test.junit
   androidTestImplementation depsPack.androidTest

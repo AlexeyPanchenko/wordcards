@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.wordlist.impl.db
+package ru.alexeypan.wordcards.wordlist.db
 
 import androidx.room.Entity
 import androidx.room.Index

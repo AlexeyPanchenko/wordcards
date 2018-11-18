@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.categories.impl.db
+package ru.alexeypan.wordcards.categories.db
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

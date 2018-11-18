@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.word_list_activity.*
-import ru.alexeypan.wordcards.wordlist.impl.db.WordDB
-import ru.alexeypan.wordcards.wordlist.impl.db.WordsDao
-import ru.alexeypan.wordcards.wordlist.impl.db.WordsDatabase
+import ru.alexeypan.wordcards.injector.Injector
+import ru.alexeypan.wordcards.wordlist.db.WordDB
+import ru.alexeypan.wordcards.wordlist.db.WordsDao
 
 class WordListActivity : AppCompatActivity() {
 
@@ -37,7 +37,7 @@ class WordListActivity : AppCompatActivity() {
     rvList.adapter = adapter
 
     val categoryId = intent.getIntExtra(CATEGORY_ID, -1)
-    dao = WordsDatabase.getInstance(this.applicationContext)?.wordsDao()!!
+    dao = Injector.appDatabase?.wordsDao()!!
     dao.getAll(categoryId).forEach { adapter.addItem(Word(it.original, it.translate)) }
     var c = 0
     fabAdd.setOnClickListener {

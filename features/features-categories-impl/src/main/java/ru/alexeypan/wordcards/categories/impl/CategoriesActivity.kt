@@ -5,9 +5,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.category_list.*
-import ru.alexeypan.wordcards.categories.impl.db.CategoriesDB
-import ru.alexeypan.wordcards.categories.impl.db.CategoriesDao
-import ru.alexeypan.wordcards.categories.impl.db.CategoryDB
+import ru.alexeypan.wordcards.categories.db.CategoriesDao
+import ru.alexeypan.wordcards.categories.db.CategoryDB
 import ru.alexeypan.wordcards.injector.Injector
 
 class CategoriesActivity : AppCompatActivity() {
@@ -22,17 +21,17 @@ class CategoriesActivity : AppCompatActivity() {
     rvList.layoutManager = LinearLayoutManager(this)
     val adapter = CategoriesAdapter()
     rvList.adapter = adapter
-    dao = CategoriesDB.getInstance(this.applicationContext)?.categoriesDao()!!
+    dao = Injector.appDatabase?.categoriesDao()!!
 
     dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
     adapter.setClickListener { Injector.wordListScope.wordListModule().getStarter(this).start(it.id) }
 
     var c = 0
     fabAdd.setOnClickListener {
-      val categoryDB = CategoryDB(c++, "Title =")
+      val categoryDB = CategoryDB(c++, "Title = $c")
       dao.save(categoryDB)
       val categoryDB2 = dao.get(categoryDB.id)
-      adapter.addItem(Category(categoryDB2.id, categoryDB2.title + categoryDB2.id))
+      adapter.addItem(Category(categoryDB2.id, categoryDB2.title))
     }
   }
 }

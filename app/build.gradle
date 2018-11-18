@@ -76,6 +76,7 @@ dependencies {
   implementation project(deps.modules.wordlistApi)
   implementation project(deps.modules.wordlistImpl)
   implementation project(deps.modules.coreUI)
+  implementation project(deps.modules.coreDB)
   implementation project(deps.modules.injector)
 
   implementation deps.androidx.appcompat

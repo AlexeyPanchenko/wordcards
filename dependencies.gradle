@@ -32,10 +32,13 @@ ext.deps = [
   ],
   'modules': [
     'wordlistApi'         : ":features-wordlist-api",
+    'wordlistDB'         : ":features-wordlist-db",
     'wordlistImpl'        : ":features-wordlist-impl",
     'categoriesApi'       : ":features-categories-api",
+    'categoriesDB'        : ":features-categories-db",
     'categoriesImpl'      : ":features-categories-impl",
     'coreUI'              : ":core-ui",
+    'coreDB'              : ":core-db",
     'injector'            : ":injector",
   ],
   test: [

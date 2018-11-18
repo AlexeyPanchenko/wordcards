@@ -3,14 +3,23 @@ include ':app', ':buildSrc', ':injector'
 include ':features-wordlist-api'
 project(':features-wordlist-api').projectDir = new File(rootDir, 'features/features-wordlist-api')
 
+include ':features-wordlist-db'
+project(':features-wordlist-db').projectDir = new File(rootDir, 'features/features-wordlist-db')
+
 include ':features-wordlist-impl'
 project(':features-wordlist-impl').projectDir = new File(rootDir, 'features/features-wordlist-impl')
 
 include ':core-ui'
 project(':core-ui').projectDir = new File(rootDir, 'core/core-ui')
 
+include ':core-db'
+project(':core-db').projectDir = new File(rootDir, 'core/core-db')
+
 include ':features-categories-api'
 project(':features-categories-api').projectDir = new File(rootDir, 'features/features-categories-api')
+
+include ':features-categories-db'
+project(':features-categories-db').projectDir = new File(rootDir, 'features/features-categories-db')
 
 include ':features-categories-impl'
 project(':features-categories-impl').projectDir = new File(rootDir, 'features/features-categories-impl')
