@@ -30,7 +30,7 @@ dependencies {
   implementation project(deps.modules.wordlistDB)
   implementation deps.kotlin.lib8
 
-  api deps.androidx.room.lib
+  implementation deps.androidx.room.lib
   kapt deps.androidx.room.processor
 
   testImplementation deps.test.junit
