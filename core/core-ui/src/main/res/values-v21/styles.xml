@@ -2,7 +2,8 @@
 <resources>
   <style name="AppTheme.WhiteStatusBar" parent="AppTheme" >
     <item name="android:windowBackground">@color/appBackground</item>
-    <item name="android:windowTranslucentStatus">true</item>
+    <item name="android:statusBarColor">@android:color/transparent</item>
+    <item name="android:navigationBarColor">@color/colorPrimary</item>
     <item name="android:fitsSystemWindows">true</item>
   </style>
 </resources>

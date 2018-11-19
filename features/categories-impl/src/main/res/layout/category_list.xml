@@ -5,19 +5,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:fitsSystemWindows="true"
+  android:background="@color/appBackground"
   >
-
-  <com.google.android.material.floatingactionbutton.FloatingActionButton
-    android:id="@+id/fabAdd"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:src="@drawable/ic_add"
-    android:theme="@style/Widget.MaterialComponents.FloatingActionButton"
-    android:tint="@android:color/white"
-    app:layout_anchor="@+id/bottomBar"
-    app:layout_behavior="ru.alexeypan.wordcards.utils.ui.fab.ScrollToHideFabBehaviour"
-    />
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/rvList"
@@ -36,7 +25,19 @@
     app:backgroundTint="@color/colorPrimary"
     app:fabAlignmentMode="center"
     app:hideOnScroll="true"
+    app:fabCradleRoundedCornerRadius="100dp"
     app:navigationIcon="@drawable/ic_hamburger"
+    />
+
+  <com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/fabAdd"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/ic_add"
+    android:theme="@style/Widget.MaterialComponents.FloatingActionButton"
+    android:tint="@android:color/white"
+    app:layout_anchor="@+id/bottomBar"
+    app:layout_behavior="ru.alexeypan.wordcards.utils.ui.fab.ScrollToHideFabBehaviour"
     />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

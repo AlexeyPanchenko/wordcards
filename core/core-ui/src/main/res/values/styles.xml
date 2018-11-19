@@ -8,6 +8,7 @@
 
   <style name="AppTheme.WhiteStatusBar" parent="AppTheme" >
     <item name="android:windowBackground">@color/appBackground</item>
+    <item name="android:fitsSystemWindows">true</item>
   </style>
 
 </resources>

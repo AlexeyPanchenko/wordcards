@@ -28,7 +28,9 @@ class CategoriesActivity : AppCompatActivity() {
 
     var c = 0
     fabAdd.setOnClickListener {
+
       val categoryDB = CategoryDB(c++, "Title = $c")
+      Toast.makeText(this, "add $categoryDB", Toast.LENGTH_SHORT).show()
       dao.save(categoryDB)
       val categoryDB2 = dao.get(categoryDB.id)
       adapter.addItem(Category(categoryDB2.id, categoryDB2.title))
