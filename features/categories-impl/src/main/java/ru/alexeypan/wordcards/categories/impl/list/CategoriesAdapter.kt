@@ -1,10 +1,12 @@
-package ru.alexeypan.wordcards.categories.impl
+package ru.alexeypan.wordcards.categories.impl.list
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import ru.alexeypan.wordcards.categories.impl.Category
+import ru.alexeypan.wordcards.categories.impl.R
 
 class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
 

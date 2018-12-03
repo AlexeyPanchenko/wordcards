@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.categories.impl
+package ru.alexeypan.wordcards.categories.impl.list
 
 import android.os.Bundle
 import android.widget.Toast
@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.category_list.*
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
-import ru.alexeypan.wordcards.categories.db.CategoryDB
+import ru.alexeypan.wordcards.categories.impl.Category
+import ru.alexeypan.wordcards.categories.impl.R
+import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogFragment
 import ru.alexeypan.wordcards.injector.Injector
 
 class CategoriesActivity : AppCompatActivity() {
@@ -28,12 +30,12 @@ class CategoriesActivity : AppCompatActivity() {
 
     var c = 0
     fabAdd.setOnClickListener {
-
-      val categoryDB = CategoryDB(c++, "Title = $c")
-      Toast.makeText(this, "add $categoryDB", Toast.LENGTH_SHORT).show()
-      dao.save(categoryDB)
-      val categoryDB2 = dao.get(categoryDB.id)
-      adapter.addItem(Category(categoryDB2.id, categoryDB2.title))
+      AddCategoryDialogFragment.show(supportFragmentManager)
+//      val categoryDB = CategoryDB(c++, "Title = $c")
+//      Toast.makeText(this, "add $categoryDB", Toast.LENGTH_SHORT).show()
+//      dao.save(categoryDB)
+//      val categoryDB2 = dao.get(categoryDB.id)
+//      adapter.addItem(Category(categoryDB2.id, categoryDB2.title))
     }
   }
 }
