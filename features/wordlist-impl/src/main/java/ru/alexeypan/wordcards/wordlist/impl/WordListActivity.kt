@@ -3,7 +3,6 @@ package ru.alexeypan.wordcards.wordlist.impl
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
@@ -12,6 +11,7 @@ import kotlinx.android.synthetic.main.word_list_activity.*
 import ru.alexeypan.wordcards.injector.Injector
 import ru.alexeypan.wordcards.wordlist.db.WordDB
 import ru.alexeypan.wordcards.wordlist.db.WordsDao
+import ru.alexeypan.wordcards.wordlist.impl.add.AddWordDialog
 
 class WordListActivity : AppCompatActivity() {
 
@@ -39,13 +39,12 @@ class WordListActivity : AppCompatActivity() {
     val categoryId = intent.getIntExtra(CATEGORY_ID, -1)
     dao = Injector.appDatabase?.wordsDao()!!
     dao.getAll(categoryId).forEach { adapter.addItem(Word(it.original, it.translate)) }
-    var c = 0
-    fabAdd.setOnClickListener {
-      c++
-      val wordDb = WordDB(categoryId, "Original=$c", "Translate=$c")
-      dao.save(wordDb)
-      adapter.addItem(Word(wordDb.original, wordDb.translate))
+
+    val dialog = AddWordDialog(this)
+    dialog.setListener { word ->
+      adapter.addItem(word)
+      dao.save(WordDB(categoryId, word.original, word.translate))
     }
-    Toast.makeText(this, "ID = ${categoryId}", Toast.LENGTH_SHORT).show()
+    fabAdd.setOnClickListener { dialog.show() }
   }
 }

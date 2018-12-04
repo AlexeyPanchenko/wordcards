@@ -28,14 +28,6 @@ class CategoriesActivity : AppCompatActivity() {
     dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
     adapter.setClickListener { Injector.wordListScope.wordListModule().getStarter(this).start(it.id) }
 
-    var c = 0
-    fabAdd.setOnClickListener {
-      AddCategoryDialogFragment.show(supportFragmentManager)
-//      val categoryDB = CategoryDB(c++, "Title = $c")
-//      Toast.makeText(this, "add $categoryDB", Toast.LENGTH_SHORT).show()
-//      dao.save(categoryDB)
-//      val categoryDB2 = dao.get(categoryDB.id)
-//      adapter.addItem(Category(categoryDB2.id, categoryDB2.title))
-    }
+    fabAdd.setOnClickListener { AddCategoryDialogFragment.show(supportFragmentManager) }
   }
 }

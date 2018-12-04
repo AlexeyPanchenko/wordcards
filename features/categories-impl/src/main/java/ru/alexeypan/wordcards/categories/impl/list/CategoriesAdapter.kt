@@ -22,7 +22,7 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
   fun addItem(category: Category) {
     val position: Int = categories.size
     categories.add(category)
-   notifyItemInserted(position)
+    notifyItemInserted(position)
   }
 
   fun setClickListener(listener: (category: Category) -> Unit) {
