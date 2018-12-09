@@ -45,6 +45,10 @@ class WordListActivity : AppCompatActivity() {
       adapter.addItem(word)
       dao.save(WordDB(categoryId, word.original, word.translate))
     }
+    adapter.setListener { word, pos ->
+      word.toggleState()
+      adapter.notifyItemChanged(pos, word)
+    }
     fabAdd.setOnClickListener { dialog.show() }
   }
 }

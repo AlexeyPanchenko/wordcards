@@ -5,15 +5,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.card.MaterialCardView
 
 class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
 
   private val words = arrayListOf<Word>()
 
+  private var clickListener: ((word: Word, pos: Int) -> Unit)? = null
+
   fun setItems(list: List<Word>) {
     words.clear()
     words.addAll(list)
     notifyDataSetChanged()
+  }
+
+  fun setListener(listener: (word: Word, pos: Int) -> Unit) {
+    clickListener = listener
   }
 
   fun addItem(word: Word) {
@@ -27,8 +34,8 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
   }
 
   override fun onBindViewHolder(holder: WordHolder, position: Int) {
-    holder.original.text = words[position].original
-    holder.translate.text = words[position].translate
+    val word = words[position]
+    holder.wordView.text = if (word.state == WordState.ORIGINAL) word.original else word.translate
   }
 
   override fun getItemCount(): Int {
@@ -37,6 +44,6 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
 }
 
 class WordHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-  val original: TextView = itemView.findViewById(R.id.tvWordOriginal)
-  val translate: TextView = itemView.findViewById(R.id.tvWordTranslate)
+  val card: MaterialCardView = itemView.findViewById(R.id.cardWord)
+  val wordView: TextView = itemView.findViewById(R.id.tvWord)
 }
