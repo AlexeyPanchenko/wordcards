@@ -36,6 +36,9 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
   override fun onBindViewHolder(holder: WordHolder, position: Int) {
     val word = words[position]
     holder.wordView.text = if (word.state == WordState.ORIGINAL) word.original else word.translate
+    holder.itemView.setOnClickListener {
+      clickListener?.invoke(word, position)
+    }
   }
 
   override fun getItemCount(): Int {
