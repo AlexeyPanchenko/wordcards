@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
 
-  private val words = arrayListOf<Word>()
+  public val words = arrayListOf<Word>()
 
   private var clickListener: ((word: Word, pos: Int) -> Unit)? = null
 

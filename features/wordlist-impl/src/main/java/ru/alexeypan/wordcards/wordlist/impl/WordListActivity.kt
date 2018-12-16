@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.word_list_activity.*
 import ru.alexeypan.wordcards.injector.Injector
@@ -31,14 +31,23 @@ class WordListActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.word_list_activity)
     rvList.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-    val snapHelper = PagerSnapHelper()
-    snapHelper.attachToRecyclerView(rvList)
+//    val snapHelper = PagerSnapHelper()
+//    snapHelper.attachToRecyclerView(rvList)
     val adapter = WordsAdapter()
     rvList.adapter = adapter
 
+    val callback = ItemTouchHelperCallback<Word>(adapter)
+    val helper = ItemTouchHelper(callback)
+    val lm = SlideLayautManager(rvList, helper)
+    helper.attachToRecyclerView(rvList)
+    rvList.layoutManager = lm
+
     val categoryId = intent.getIntExtra(CATEGORY_ID, -1)
     dao = Injector.appDatabase?.wordsDao()!!
-    dao.getAll(categoryId).forEach { adapter.addItem(Word(it.original, it.translate)) }
+    dao.getAll(categoryId).forEach {
+      adapter.addItem(Word(it.original, it.translate))
+    }
+    callback.setDataList(adapter.words)
 
     val dialog = AddWordDialog(this)
     dialog.setListener { word ->
