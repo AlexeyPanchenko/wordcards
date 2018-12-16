@@ -1,6 +1,6 @@
 ext.applicationId = "ru.alexeypan.wordcards"
 ext.versions = [
-  'minSdk'                : 15,
+  'minSdk'                : 16,
   'compileSdk'            : 28,
   'targetSdk'             : 28,
 
