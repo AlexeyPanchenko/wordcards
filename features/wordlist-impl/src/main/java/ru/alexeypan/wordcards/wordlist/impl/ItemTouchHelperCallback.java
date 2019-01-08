@@ -16,23 +16,16 @@ public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
   private OnSlideListener<T> mListener;
 
   public ItemTouchHelperCallback(@NonNull RecyclerView.Adapter adapter) {
-    this.adapter = checkIsNull(adapter);
+    this.adapter = adapter;
   }
 
   public ItemTouchHelperCallback(@NonNull RecyclerView.Adapter adapter, OnSlideListener<T> listener) {
-    this.adapter = checkIsNull(adapter);
+    this.adapter = adapter;
     this.mListener = listener;
   }
 
   public void setDataList(List<T> dataList) {
     this.dataList = dataList;
-  }
-
-  private <T> T checkIsNull(T t) {
-    if (t == null) {
-      throw new NullPointerException();
-    }
-    return t;
   }
 
   public void setOnSlideListener(OnSlideListener<T> mListener) {
@@ -108,5 +101,4 @@ public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
   private float getThreshold(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
     return recyclerView.getWidth() * getSwipeThreshold(viewHolder);
   }
-
 }
