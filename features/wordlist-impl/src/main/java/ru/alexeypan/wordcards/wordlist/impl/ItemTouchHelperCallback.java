@@ -89,24 +89,6 @@ public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
         ratio = -1;
       }
       itemView.setRotation(ratio * ItemConfig.DEFAULT_ROTATE_DEGREE);
-      int childCount = recyclerView.getChildCount();
-      if (childCount > ItemConfig.DEFAULT_SHOW_ITEM) {
-        for (int position = 1; position < childCount - 1; position++) {
-          int index = childCount - position - 1;
-          View view = recyclerView.getChildAt(position);
-          view.setScaleX(1 - index * ItemConfig.DEFAULT_SCALE + Math.abs(ratio) * ItemConfig.DEFAULT_SCALE);
-          view.setScaleY(1 - index * ItemConfig.DEFAULT_SCALE + Math.abs(ratio) * ItemConfig.DEFAULT_SCALE);
-          view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / ItemConfig.DEFAULT_TRANSLATE_Y);
-        }
-      } else {
-        for (int position = 0; position < childCount - 1; position++) {
-          int index = childCount - position - 1;
-          View view = recyclerView.getChildAt(position);
-          view.setScaleX(1 - index * ItemConfig.DEFAULT_SCALE + Math.abs(ratio) * ItemConfig.DEFAULT_SCALE);
-          view.setScaleY(1 - index * ItemConfig.DEFAULT_SCALE + Math.abs(ratio) * ItemConfig.DEFAULT_SCALE);
-          view.setTranslationY((index - Math.abs(ratio)) * itemView.getMeasuredHeight() / ItemConfig.DEFAULT_TRANSLATE_Y);
-        }
-      }
       if (mListener != null) {
         if (ratio != 0) {
           mListener.onSliding(viewHolder, ratio, ratio < 0 ? ItemConfig.SLIDING_LEFT : ItemConfig.SLIDING_RIGHT);
