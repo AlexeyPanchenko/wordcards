@@ -1,11 +1,14 @@
 package ru.alexeypan.wordcards.wordlist.impl
 
+import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.MotionEventCompat
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.Slide
+import androidx.transition.TransitionManager
 
 class SlideLayoutManager(
   private val recyclerView: RecyclerView,
@@ -22,9 +25,11 @@ class SlideLayoutManager(
     detachAndScrapAttachedViews(recycler)
     if (itemCount > 0) {
       val view = recycler.getViewForPosition(0)
+      if (!ViewCompat.isAttachedToWindow(view)) {
+        TransitionManager.beginDelayedTransition(recyclerView, Slide(Gravity.BOTTOM))
+      }
       addView(view)
       prepareCurrentView(view)
-      view.setOnTouchListener(mOnTouchListener)
     }
   }
 
@@ -39,14 +44,18 @@ class SlideLayoutManager(
       widthSpace / 2 + getDecoratedMeasuredWidth(view),
       heightSpace / 5 + getDecoratedMeasuredHeight(view)
     )
+    view.setOnTouchListener(mOnTouchListener)
   }
 
   private val mOnTouchListener = View.OnTouchListener { v, event ->
     val childViewHolder = recyclerView.getChildViewHolder(v)
-    if (MotionEventCompat.getActionMasked(event) === MotionEvent.ACTION_MOVE) {
+    if (event.action == MotionEvent.ACTION_DOWN) {
+      return@OnTouchListener false
+    }
+    if (event.action == MotionEvent.ACTION_MOVE) {
       touchHelper.startSwipe(childViewHolder)
     }
-    false
+    return@OnTouchListener false
   }
 
 }
