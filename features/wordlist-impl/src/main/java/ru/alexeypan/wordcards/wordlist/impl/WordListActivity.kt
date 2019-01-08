@@ -38,7 +38,7 @@ class WordListActivity : AppCompatActivity() {
 
     val callback = ItemTouchHelperCallback<Word>(adapter)
     val helper = ItemTouchHelper(callback)
-    val lm = SlideLayautManager(rvList, helper)
+    val lm = SlideLayoutManager(rvList, helper)
     helper.attachToRecyclerView(rvList)
     rvList.layoutManager = lm
 

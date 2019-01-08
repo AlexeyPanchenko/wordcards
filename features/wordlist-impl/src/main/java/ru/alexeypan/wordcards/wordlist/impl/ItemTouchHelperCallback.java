@@ -44,7 +44,7 @@ public class ItemTouchHelperCallback<T> extends ItemTouchHelper.Callback {
     int dragFlags = 0;
     int slideFlags = 0;
     RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-    if (layoutManager instanceof SlideLayautManager) {
+    if (layoutManager instanceof SlideLayoutManager) {
       slideFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
     }
     return makeMovementFlags(dragFlags, slideFlags);
