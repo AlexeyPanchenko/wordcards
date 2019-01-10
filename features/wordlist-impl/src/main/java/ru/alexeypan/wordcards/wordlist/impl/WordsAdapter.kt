@@ -2,7 +2,7 @@ package ru.alexeypan.wordcards.wordlist.impl
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
 
-  public val words = arrayListOf<Word>()
+  val words = arrayListOf<Word>()
 
   private var clickListener: ((word: Word, pos: Int) -> Unit)? = null
 
@@ -34,6 +34,11 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
     notifyItemInserted(position)
   }
 
+  fun removeItem(position: Int) {
+    words.removeAt(position)
+    notifyDataSetChanged()
+  }
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordHolder {
     return WordHolder(LayoutInflater.from(parent.context).inflate(R.layout.word_list_item, parent, false))
   }
@@ -41,20 +46,25 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
   override fun onBindViewHolder(holder: WordHolder, position: Int) {
     val word = words[position]
     holder.wordView.text = if (word.state == WordState.ORIGINAL) word.original else word.translate
-    holder.itemView.setOnClickListener {
-      val animator1 = ObjectAnimator.ofFloat(holder.itemView, "rotationY", 0f, 90f)
-      val animator2 = ObjectAnimator.ofFloat(holder.itemView, "rotationY", -90f, 0f)
-      animator1.duration = 300
-      animator2.duration = 300
-      animator1.interpolator = AccelerateInterpolator()
-      animator2.interpolator = DecelerateInterpolator()
-      animator1.addListener(object : AnimatorListenerAdapter() {
+
+    val endAnimation = ValueAnimator.ofFloat(-90f, 0f).apply {
+      duration = 300
+      interpolator = DecelerateInterpolator()
+      addUpdateListener { animation ->  holder.itemView.rotationY = animation.animatedValue as Float }
+    }
+    val startAnimation = ValueAnimator.ofFloat(0f, 90f).apply {
+      duration = 300
+      interpolator = AccelerateInterpolator()
+      addUpdateListener { animation ->  holder.itemView.rotationY = animation.animatedValue as Float }
+      addListener(object : AnimatorListenerAdapter() {
         override fun onAnimationEnd(animation: Animator?) {
           clickListener?.invoke(word, position)
-          animator2.start()
+          endAnimation.start()
         }
       })
-      animator1.start()
+    }
+    holder.card.setOnClickListener {
+      startAnimation.start()
     }
   }
 

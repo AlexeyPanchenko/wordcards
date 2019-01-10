@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.wordlist.impl
+package ru.alexeypan.wordcards.wordlist.impl.view.slide
 
 import android.view.Gravity
 import android.view.MotionEvent

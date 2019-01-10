@@ -12,6 +12,8 @@ import ru.alexeypan.wordcards.injector.Injector
 import ru.alexeypan.wordcards.wordlist.db.WordDB
 import ru.alexeypan.wordcards.wordlist.db.WordsDao
 import ru.alexeypan.wordcards.wordlist.impl.add.AddWordDialog
+import ru.alexeypan.wordcards.wordlist.impl.view.slide.SlideLayoutManager
+import ru.alexeypan.wordcards.wordlist.impl.view.slide.SlideTouchHelperCallback
 
 class WordListActivity : AppCompatActivity() {
 
@@ -31,12 +33,10 @@ class WordListActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.word_list_activity)
     rvList.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
-//    val snapHelper = PagerSnapHelper()
-//    snapHelper.attachToRecyclerView(rvList)
     val adapter = WordsAdapter()
     rvList.adapter = adapter
 
-    val callback = ItemTouchHelperCallback<Word>(adapter)
+    val callback = SlideTouchHelperCallback()
     val helper = ItemTouchHelper(callback)
     val lm = SlideLayoutManager(rvList, helper)
     helper.attachToRecyclerView(rvList)
@@ -47,7 +47,10 @@ class WordListActivity : AppCompatActivity() {
     dao.getAll(categoryId).forEach {
       adapter.addItem(Word(it.original, it.translate))
     }
-    callback.setDataList(adapter.words)
+    callback.onSlideEndCallback = { viewHolder, direction ->
+      val layoutPosition = viewHolder.layoutPosition
+      adapter.removeItem(layoutPosition)
+    }
 
     val dialog = AddWordDialog(this)
     dialog.setListener { word ->
