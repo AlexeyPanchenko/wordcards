@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.wordlist.impl.start
+package ru.alexeypan.wordcards.wordlist.impl.outside.start
 
 import androidx.appcompat.app.AppCompatActivity
 import ru.alexeypan.wordcards.wordlist.api.WordListStarter

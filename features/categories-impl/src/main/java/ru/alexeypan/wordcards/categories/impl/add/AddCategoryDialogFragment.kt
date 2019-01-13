@@ -10,6 +10,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
 import ru.alexeypan.wordcards.categories.db.CategoryDB
+import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.injector.Injector
 
 
@@ -32,8 +33,9 @@ class AddCategoryDialogFragment : DialogFragment() {
   lateinit var dao: CategoriesDao
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    val dbScope: DBScope = Injector.openScope(DBScope::class.java)
     super.onCreate(savedInstanceState)
-    dao = Injector.appDatabase?.categoriesDao()!!
+    dao = dbScope.appDatabase()?.categoriesDao()!!
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

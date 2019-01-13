@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.word_list_activity.*
+import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.injector.Injector
 import ru.alexeypan.wordcards.wordlist.db.WordDB
 import ru.alexeypan.wordcards.wordlist.db.WordsDao
@@ -30,6 +31,7 @@ class WordListActivity : AppCompatActivity() {
   lateinit var dao: WordsDao
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    val dbScope: DBScope = Injector.openScope(DBScope::class.java)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.word_list_activity)
     rvList.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
@@ -43,7 +45,7 @@ class WordListActivity : AppCompatActivity() {
     rvList.layoutManager = lm
 
     val categoryId = intent.getIntExtra(CATEGORY_ID, -1)
-    dao = Injector.appDatabase?.wordsDao()!!
+    dao = dbScope.appDatabase()?.wordsDao()!!
     dao.getAll(categoryId).forEach {
       adapter.addItem(Word(it.original, it.translate))
     }

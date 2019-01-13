@@ -1,6 +1,7 @@
 package ru.alexeypan.wordcards.wordlist.api
 
-interface WordListScope {
+import ru.alexeypan.wordcards.injector.Scope
 
+interface WordListScope : Scope {
   fun wordListModule(): WordListModule
 }

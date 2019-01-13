@@ -27,6 +27,7 @@ dependencies {
 
   implementation deps.kotlin.lib8
   implementation deps.androidx.appcompat
+  implementation project(deps.modules.injector)
 
   testImplementation deps.test.junit
   androidTestImplementation depsPack.androidTest

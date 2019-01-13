@@ -22,6 +22,7 @@ abstract class AppDatabaseImpl : RoomDatabase(), AppDatabase {
         synchronized(AppDatabase::class) {
           instance = Room
             .databaseBuilder(context, AppDatabaseImpl::class.java, "word-cards.db")
+            // todo: remove main thread work
             .allowMainThreadQueries()
             .build()
         }
