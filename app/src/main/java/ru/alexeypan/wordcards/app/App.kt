@@ -10,7 +10,10 @@ class App : Application() {
 
   override fun onCreate() {
     super.onCreate()
+    registerScopes()
+  }
 
+  private fun registerScopes() {
     Injector.registerScope(DBScope::class.java, DBScope(this))
     Injector.registerScope(WordListScope::class.java, WordListScopeImpl())
   }
