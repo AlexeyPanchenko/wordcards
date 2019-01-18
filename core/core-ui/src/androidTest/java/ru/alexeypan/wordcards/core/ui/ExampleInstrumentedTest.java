@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.utils;
+package ru.alexeypan.wordcards.core.ui;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
