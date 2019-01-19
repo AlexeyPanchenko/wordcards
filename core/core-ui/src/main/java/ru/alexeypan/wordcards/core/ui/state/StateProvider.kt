@@ -1,7 +1,9 @@
 package ru.alexeypan.wordcards.core.ui.state
 
 interface StateProvider {
+  /** Provides [RootStateRegistry] */
   fun stateRegistry(): StateRegistry
+  /** Provides [NestedStateRegistry] */
   fun stateRegistry(name: String): StateRegistry
 }
 
