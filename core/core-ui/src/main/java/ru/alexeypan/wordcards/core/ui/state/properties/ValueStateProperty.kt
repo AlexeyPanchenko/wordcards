@@ -26,6 +26,8 @@ abstract class ValueStateProperty<T>(
 
   override fun contains(): Boolean = value != null
 
+  override fun name(): String = name
+
   override fun saveState(bundle: Bundle) {
     if (value == null) {
       bundle.remove(name)
@@ -53,6 +55,4 @@ abstract class ValueStateProperty<T>(
   }
 
   override fun hashCode(): Int = name.hashCode()
-
-  override fun name(): String = name
 }

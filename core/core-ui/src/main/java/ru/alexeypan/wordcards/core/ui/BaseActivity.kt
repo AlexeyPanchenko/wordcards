@@ -2,26 +2,22 @@ package ru.alexeypan.wordcards.core.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import ru.alexeypan.wordcards.core.ui.state.RootStateRegistry
+import ru.alexeypan.wordcards.core.ui.state.Savable
+import ru.alexeypan.wordcards.core.ui.state.StateProvider
+import ru.alexeypan.wordcards.core.ui.state.StateRegistryProvider
 
 open class BaseActivity : AppCompatActivity() {
 
-  private var rootStateRegistry: RootStateRegistry? = null
+  protected val stateProvider: StateProvider by lazy { StateRegistryProvider() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    savedInstanceState?.let { stateRegistry().restoreState(it) }
+    savedInstanceState?.let { (stateProvider.stateRegistry() as Savable).restoreState(it) }
   }
 
   override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
-    stateRegistry().saveState(outState)
+    (stateProvider.stateRegistry() as Savable).saveState(outState)
   }
 
-  protected fun stateRegistry(): RootStateRegistry {
-    if (rootStateRegistry == null) {
-      rootStateRegistry = RootStateRegistry()
-    }
-    return rootStateRegistry!!
-  }
 }

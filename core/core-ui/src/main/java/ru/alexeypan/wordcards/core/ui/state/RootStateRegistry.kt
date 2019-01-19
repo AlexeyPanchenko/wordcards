@@ -3,9 +3,9 @@ package ru.alexeypan.wordcards.core.ui.state
 import android.os.Bundle
 import ru.alexeypan.wordcards.core.ui.state.properties.StateProperty
 
-class RootStateRegistry(private var bundle: Bundle? = null) : StateRegistry, Savable {
+open class RootStateRegistry(protected var bundle: Bundle? = null) : StateRegistry, Savable {
 
-  private val stateProperties = hashSetOf<Savable>()
+  protected val stateProperties = hashSetOf<StateProperty>()
 
   override fun register(property: StateProperty) {
     property.restoreState(bundle)
