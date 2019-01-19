@@ -3,12 +3,13 @@ package ru.alexeypan.wordcards.wordlist.impl
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.word_list_activity.*
 import ru.alexeypan.wordcards.core.db.scope.DBScope
+import ru.alexeypan.wordcards.core.ui.BaseActivity
 import ru.alexeypan.wordcards.injector.Injector
 import ru.alexeypan.wordcards.wordlist.db.WordDB
 import ru.alexeypan.wordcards.wordlist.db.WordsDao
@@ -16,7 +17,7 @@ import ru.alexeypan.wordcards.wordlist.impl.add.AddWordDialog
 import ru.alexeypan.wordcards.wordlist.impl.view.slide.SlideLayoutManager
 import ru.alexeypan.wordcards.wordlist.impl.view.slide.SlideTouchHelperCallback
 
-class WordListActivity : AppCompatActivity() {
+class WordListActivity : BaseActivity() {
 
   companion object {
     private const val CATEGORY_ID = "category_id"
@@ -45,6 +46,7 @@ class WordListActivity : AppCompatActivity() {
     rvList.layoutManager = lm
 
     val categoryId = intent.getIntExtra(CATEGORY_ID, -1)
+    Toast.makeText(this, "Id = $categoryId", Toast.LENGTH_SHORT).show()
     dao = dbScope.appDatabase()?.wordsDao()!!
     dao.getAll(categoryId).forEach {
       adapter.addItem(Word(it.original, it.translate))

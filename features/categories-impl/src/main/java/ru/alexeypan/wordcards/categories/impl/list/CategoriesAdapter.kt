@@ -19,6 +19,11 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
     notifyDataSetChanged()
   }
 
+  fun clear() {
+    categories.clear()
+    notifyDataSetChanged()
+  }
+
   fun addItem(category: Category) {
     val position: Int = categories.size
     categories.add(category)

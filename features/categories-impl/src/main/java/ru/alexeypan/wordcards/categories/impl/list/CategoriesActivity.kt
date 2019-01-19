@@ -5,9 +5,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.category_list.*
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
+import ru.alexeypan.wordcards.categories.db.CategoryDB
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.categories.impl.R
-import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogFragment
+import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogWidget
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.core.ui.BaseActivity
 import ru.alexeypan.wordcards.injector.Injector
@@ -32,7 +33,15 @@ class CategoriesActivity : BaseActivity() {
     dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
     adapter.setClickListener { wordListScope.wordListModule().getStarter(this).start(it.id) }
 
-    fabAdd.setOnClickListener { AddCategoryDialogFragment.show(supportFragmentManager) }
+    val addCategoryDialog = AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle)
+    addCategoryDialog.addCategoryListener = {
+      dao.save(CategoryDB(it))
+      adapter.clear()
+      dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
+    }
+    addCategoryDialog.revival()
+
+    fabAdd.setOnClickListener { addCategoryDialog.show() }
   }
 
   override fun onDestroy() {

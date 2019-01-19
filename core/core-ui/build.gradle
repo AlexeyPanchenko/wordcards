@@ -34,7 +34,6 @@ dependencies {
   implementation deps.kotlin.lib8
   implementation deps.androidx.appcompat
   implementation deps.androidMaterial
-  implementation deps.androidx.lifecycle.commonj8
 
   testImplementation deps.test.junit
   androidTestImplementation depsPack.androidTest

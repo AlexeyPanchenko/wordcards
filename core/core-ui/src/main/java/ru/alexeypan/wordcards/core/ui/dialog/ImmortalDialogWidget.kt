@@ -1,17 +1,17 @@
 package ru.alexeypan.wordcards.core.ui.dialog
 
 import android.app.Dialog
-import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import ru.alexeypan.wordcards.core.ui.state.StateRegistry
 import ru.alexeypan.wordcards.core.ui.state.properties.BoolProperty
 
-class ImmortalDialogWidget(
+open class ImmortalDialogWidget(
   private val dialogFactory: DialogFactory,
   stateRegistry: StateRegistry,
   lifecycle: Lifecycle
-) : DialogWidget, Immortal, DefaultLifecycleObserver {
+) : DialogWidget, Immortal, LifecycleObserver {
 
   protected var dialog: Dialog? = null
   private val isShowing: BoolProperty = BoolProperty("immortal_dialog_is_showing", false)
@@ -49,7 +49,8 @@ class ImmortalDialogWidget(
     return false
   }
 
-  override fun onDestroy(owner: LifecycleOwner) {
+  @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+  fun onDestroy() {
     dialog?.dismiss()
   }
 }
