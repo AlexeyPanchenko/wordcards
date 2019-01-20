@@ -45,12 +45,8 @@ class AddCategoryDialogWidget(
     return AlertDialog.Builder(context)
       .setTitle("Новая категория")
       .setView(editText)
-      .setPositiveButton("Добавить") { dialog, which ->
-        hide()
-        addCategoryListener?.invoke(editText.text.toString())
-      }
-      .setNegativeButton("Отмена") { dialog, which -> hide() }
-      .setOnCancelListener { hide() }
+      .setPositiveButton("Добавить") { dialog, which -> addCategoryListener?.invoke(editText.text.toString()) }
+      .setNegativeButton("Отмена") { dialog, which -> }
       .create()
   }
 
