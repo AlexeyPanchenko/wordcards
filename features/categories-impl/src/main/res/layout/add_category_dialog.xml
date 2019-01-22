@@ -1,60 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:paddingTop="16dp"
-  android:paddingRight="16dp"
   android:background="@drawable/round_dialog"
-  >
+  android:paddingTop="32dp"
+  android:paddingRight="24dp"
+  android:paddingBottom="32dp">
 
   <ImageView
     android:id="@+id/ivClose"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignBottom="@+id/tvTitle"
-    android:layout_alignParentLeft="true"
     android:layout_alignParentStart="true"
-    android:src="@drawable/ic_close"
-    android:paddingLeft="16dp"
-    />
+    android:layout_alignParentLeft="true"
+    android:layout_marginLeft="24dp"
+    android:background="?selectableItemBackgroundBorderless"
+    android:src="@drawable/ic_close" />
 
   <TextView
     android:id="@+id/tvTitle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="16dp"
+    android:layout_marginLeft="8dp"
     android:layout_toLeftOf="@+id/tvReady"
     android:layout_toRightOf="@+id/ivClose"
     android:ellipsize="end"
+    android:fontFamily="sans-serif-medium"
     android:gravity="start"
     android:maxLines="1"
-    android:text="Новая категория"
+    android:text="@string/categories_add_new_title"
     android:textColor="@android:color/black"
-    android:textSize="20sp"
-    android:textStyle="bold"
-    />
+    android:textSize="21sp"
+    android:textStyle="bold" />
 
   <TextView
     android:id="@+id/tvReady"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:layout_alignBaseline="@+id/tvTitle"
     android:layout_alignParentEnd="true"
     android:layout_alignParentRight="true"
-    android:paddingRight="16dp"
-    android:text="ГОТОВО"
-    android:textColor="@android:color/darker_gray"
-    android:textSize="20sp"
-    android:textStyle="bold"
-    />
+    android:background="?selectableItemBackgroundBorderless"
+    android:fontFamily="sans-serif-medium"
+    android:text="@string/categories_add_new_ready"
+    android:textColor="@color/colorAccent"
+    android:textSize="16sp"
+    android:textStyle="bold" />
 
   <EditText
     android:id="@+id/etCategory"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@+id/tvTitle"
-    android:layout_marginTop="16dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginBottom="16dp"
-    />
+    android:layout_marginLeft="24dp"
+    android:layout_marginTop="28dp"
+    android:inputType="textCapSentences"/>
 </RelativeLayout>

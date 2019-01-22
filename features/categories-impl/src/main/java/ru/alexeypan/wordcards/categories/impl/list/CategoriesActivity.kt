@@ -34,8 +34,8 @@ class CategoriesActivity : BaseActivity() {
     adapter.setClickListener { wordListScope.wordListModule().getStarter(this).start(it.id) }
 
     val addCategoryDialog = AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle)
-    addCategoryDialog.addCategoryListener = {
-      dao.save(CategoryDB(it))
+    addCategoryDialog.addCategoryListener = {categoryName ->
+      dao.save(CategoryDB(categoryName))
       adapter.clear()
       dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
     }

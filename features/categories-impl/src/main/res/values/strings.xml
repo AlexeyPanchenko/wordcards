@@ -1,3 +1,4 @@
 <resources>
-  <string name="app_name">Categories Impl</string>
+  <string name="categories_add_new_title">Новая категория</string>
+  <string name="categories_add_new_ready">ГОТОВО</string>
 </resources>
