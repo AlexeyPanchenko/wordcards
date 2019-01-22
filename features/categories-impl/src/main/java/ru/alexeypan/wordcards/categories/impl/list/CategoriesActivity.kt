@@ -41,7 +41,7 @@ class CategoriesActivity : BaseActivity() {
     }
     addCategoryDialog.revival()
 
-    fabAdd.setOnClickListener { addCategoryDialog.show() }
+    fabAdd.setOnClickListener { addCategoryDialog.show("") }
   }
 
   override fun onDestroy() {
