@@ -32,7 +32,7 @@ class AddCategoryDialogWidget(
     stateRegistry.register(categoryProp)
   }
 
-  fun show(categoryName: String) {
+  fun show(categoryName: String = "") {
     categoryProp.put(categoryName)
     dialogWidget.show()
   }

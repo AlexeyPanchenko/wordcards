@@ -12,6 +12,8 @@
     android:id="@+id/rvList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
     android:clipToPadding="false"
     android:layoutAnimation="@anim/layout_animation_show_from_bottom"
     tools:listitem="@layout/category_item"

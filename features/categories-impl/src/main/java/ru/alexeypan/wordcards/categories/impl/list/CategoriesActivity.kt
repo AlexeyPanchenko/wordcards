@@ -2,7 +2,7 @@ package ru.alexeypan.wordcards.categories.impl.list
 
 import android.os.Bundle
 import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.category_list.*
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
 import ru.alexeypan.wordcards.categories.db.CategoryDB
@@ -25,13 +25,13 @@ class CategoriesActivity : BaseActivity() {
     setContentView(R.layout.category_list)
     setSupportActionBar(bottomBar)
     bottomBar.setNavigationOnClickListener { Toast.makeText(this, "REE", Toast.LENGTH_SHORT).show() }
-    rvList.layoutManager = LinearLayoutManager(this)
+    rvList.layoutManager = GridLayoutManager(this, 3)
     val adapter = CategoriesAdapter()
     rvList.adapter = adapter
     dao = dbScope.appDatabase()?.categoriesDao()!!
 
     dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
-    adapter.setClickListener { wordListScope.wordListModule().getStarter(this).start(it.id) }
+    adapter.setCategoryClickListener { wordListScope.wordListModule().getStarter(this).start(it.id) }
 
     val addCategoryDialog = AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle)
     addCategoryDialog.addCategoryListener = {categoryName ->
@@ -41,7 +41,12 @@ class CategoriesActivity : BaseActivity() {
     }
     addCategoryDialog.revival()
 
-    fabAdd.setOnClickListener { addCategoryDialog.show("") }
+    fabAdd.setOnClickListener { addCategoryDialog.show() }
+    adapter.setEditClickListener { addCategoryDialog.show(it.title) }
+    adapter.setDeleteClickListener { category, position ->
+      dao.remove(category.id)
+      adapter.notifyItemRemoved(position)
+    }
   }
 
   override fun onDestroy() {

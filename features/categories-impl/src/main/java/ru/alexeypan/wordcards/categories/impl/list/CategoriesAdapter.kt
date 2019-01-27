@@ -3,6 +3,7 @@ package ru.alexeypan.wordcards.categories.impl.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexeypan.wordcards.categories.impl.Category
@@ -12,6 +13,8 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
 
   private val categories = arrayListOf<Category>()
   private var categoryClickListener: ((category: Category) -> Unit)? = null
+  private var editClickListener: ((category: Category) -> Unit)? = null
+  private var deleteClickListener: ((category: Category, position: Int) -> Unit)? = null
 
   fun setItems(list: List<Category>) {
     categories.clear()
@@ -30,8 +33,16 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
     notifyItemInserted(position)
   }
 
-  fun setClickListener(listener: (category: Category) -> Unit) {
+  fun setCategoryClickListener(listener: (category: Category) -> Unit) {
     categoryClickListener = listener
+  }
+
+  fun setEditClickListener(listener: (category: Category) -> Unit) {
+    editClickListener = listener
+  }
+
+  fun setDeleteClickListener(listener: (category: Category, position: Int) -> Unit) {
+    deleteClickListener = listener
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryVH {
@@ -42,6 +53,8 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
     val category = categories[position]
     holder.title.text = category.title
     holder.itemView.setOnClickListener { categoryClickListener?.invoke(category) }
+    holder.edit.setOnClickListener { editClickListener?.invoke(category) }
+    holder.delete.setOnClickListener { deleteClickListener?.invoke(category, holder.adapterPosition) }
   }
 
   override fun getItemCount(): Int = categories.size
@@ -49,4 +62,6 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
 
 class CategoryVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
   val title: TextView = itemView.findViewById(R.id.tvCategoryTitle)
+  val edit: ImageView = itemView.findViewById(R.id.ivEdit)
+  val delete: ImageView = itemView.findViewById(R.id.ivDelete)
 }
