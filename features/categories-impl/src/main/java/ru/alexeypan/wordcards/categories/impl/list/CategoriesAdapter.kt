@@ -3,14 +3,12 @@ package ru.alexeypan.wordcards.categories.impl.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.categories.impl.R
 import java.util.*
 
-class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
+internal class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
 
   private val categories = arrayListOf<Category>()
   private var categoryClickListener: ((category: Category) -> Unit)? = null
@@ -68,9 +66,6 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
   }
 
   override fun getItemCount(): Int = categories.size
-}
 
-class CategoryVH(itemView: View) : RecyclerView.ViewHolder(itemView) {
-  val title: TextView = itemView.findViewById(R.id.tvCategoryTitle)
-  val more: ImageView = itemView.findViewById(R.id.ivMore)
+  override fun onFailedToRecycleView(holder: CategoryVH): Boolean = true
 }

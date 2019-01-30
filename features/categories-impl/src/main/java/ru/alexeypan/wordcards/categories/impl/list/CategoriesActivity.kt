@@ -21,12 +21,12 @@ import ru.alexeypan.wordcards.wordlist.api.WordListScope
 
 class CategoriesActivity : BaseActivity() {
 
-  lateinit var dbScope: DBScope
-  lateinit var wordListScope: WordListScope
+  private lateinit var dbScope: DBScope
+  private lateinit var wordListScope: WordListScope
 
-  lateinit var dao: CategoriesDao
-  lateinit var adapter: CategoriesAdapter
-  lateinit var addCategoryDialog: AddCategoryDialogWidget
+  private lateinit var dao: CategoriesDao
+  private lateinit var adapter: CategoriesAdapter
+  private lateinit var addCategoryDialog: AddCategoryDialogWidget
 
   override fun onCreate(savedInstanceState: Bundle?) {
     dbScope = Injector.openScope(DBScope::class.java)
@@ -72,8 +72,9 @@ class CategoriesActivity : BaseActivity() {
     rvList.layoutManager = GridLayoutManager(this, 3)
 
     val touchHelperCallback = DragItemTouchHelperCallback()
-    touchHelperCallback.moveListener = {fromPosition, toPosition ->
+    touchHelperCallback.setOnItemMoveListener { fromPosition, toPosition ->
       adapter.moveItems(fromPosition, toPosition)
+      //dao.moveItems(fromPosition, toPosition)
     }
     val touchHelper = ItemTouchHelper(touchHelperCallback)
     touchHelper.attachToRecyclerView(rvList)
