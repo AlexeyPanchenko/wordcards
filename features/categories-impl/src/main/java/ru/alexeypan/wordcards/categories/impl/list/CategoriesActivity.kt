@@ -6,12 +6,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.category_list.*
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
 import ru.alexeypan.wordcards.categories.db.CategoryDB
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.categories.impl.R
 import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogWidget
+import ru.alexeypan.wordcards.categories.impl.list.drag.DragItemTouchHelperCallback
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.core.ui.BaseActivity
 import ru.alexeypan.wordcards.injector.Injector
@@ -68,6 +70,13 @@ class CategoriesActivity : BaseActivity() {
     adapter.setMoreClickListener { view, category, position -> showPopupDialog(view, category, position) }
     rvList.adapter = adapter
     rvList.layoutManager = GridLayoutManager(this, 3)
+
+    val touchHelperCallback = DragItemTouchHelperCallback()
+    touchHelperCallback.moveListener = {fromPosition, toPosition ->
+      adapter.moveItems(fromPosition, toPosition)
+    }
+    val touchHelper = ItemTouchHelper(touchHelperCallback)
+    touchHelper.attachToRecyclerView(rvList)
   }
 
   private fun initAddCategoryDialog() {

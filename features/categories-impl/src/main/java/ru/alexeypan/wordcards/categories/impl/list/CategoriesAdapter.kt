@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.categories.impl.R
+import java.util.*
 
 class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
 
@@ -40,6 +41,11 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
   fun updateItem(category: Category, position: Int) {
     categories[position] = category
     notifyItemChanged(position, category)
+  }
+
+  fun moveItems(fromPosition: Int, toPosition: Int) {
+    Collections.swap(categories, fromPosition, toPosition)
+    notifyItemMoved(fromPosition, toPosition)
   }
 
   fun setCategoryClickListener(listener: (category: Category) -> Unit) {
