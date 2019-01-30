@@ -1,3 +1,7 @@
 package ru.alexeypan.wordcards.categories.impl
 
-data class Category(val id: Int, val title: String)
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
+
+@Parcelize
+data class Category(val id: Int, val title: String) : Parcelable

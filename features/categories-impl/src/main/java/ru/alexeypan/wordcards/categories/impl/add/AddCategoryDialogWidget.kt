@@ -11,11 +11,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.categories.impl.R
 import ru.alexeypan.wordcards.core.ui.dialog.DialogFactory
 import ru.alexeypan.wordcards.core.ui.dialog.Immortal
 import ru.alexeypan.wordcards.core.ui.dialog.ImmortalDialogWidget
 import ru.alexeypan.wordcards.core.ui.state.StateRegistry
+import ru.alexeypan.wordcards.core.ui.state.properties.IntProperty
 import ru.alexeypan.wordcards.core.ui.state.properties.StringProperty
 
 class AddCategoryDialogWidget(
@@ -24,16 +26,18 @@ class AddCategoryDialogWidget(
   lifecycle: Lifecycle
 ) : DialogFactory, Immortal {
 
-  var addCategoryListener: ((String) -> Unit)? = null
+  var addCategoryListener: ((String, Int?) -> Unit)? = null
   private val dialogWidget: ImmortalDialogWidget = ImmortalDialogWidget(this, stateRegistry, lifecycle)
-  private val categoryProp = StringProperty("category_name", "")
+  private val categoryTitleProp = StringProperty("category_title", "")
+  private val categoryIdProp = IntProperty("category_id")
 
   init {
-    stateRegistry.register(categoryProp)
+    stateRegistry.register(categoryTitleProp)
   }
 
-  fun show(categoryName: String = "") {
-    categoryProp.put(categoryName)
+  fun show(category: Category? = null) {
+    categoryTitleProp.put(category?.title)
+    categoryIdProp.put(category?.id)
     dialogWidget.show()
   }
 
@@ -45,17 +49,17 @@ class AddCategoryDialogWidget(
     val categoryField = view.findViewById<EditText>(R.id.etCategory)
     val closeButton = view.findViewById<ImageView>(R.id.ivClose)
     val readyButton = view.findViewById<TextView>(R.id.tvReady)
-    categoryField.setText(categoryProp.get())
+    categoryField.setText(categoryTitleProp.get())
     categoryField.addTextChangedListener(object : TextWatcher {
       override fun afterTextChanged(s: Editable?) {
-        categoryProp.put(s?.toString())
+        categoryTitleProp.put(s?.toString())
       }
       override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
       override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
     closeButton.setOnClickListener { dialogWidget.hide() }
     readyButton.setOnClickListener {
-      addCategoryListener?.invoke(categoryField.text.toString())
+      addCategoryListener?.invoke(categoryField.text.toString(), categoryIdProp.get())
       dialogWidget.hide()
     }
     dialog.setContentView(view)

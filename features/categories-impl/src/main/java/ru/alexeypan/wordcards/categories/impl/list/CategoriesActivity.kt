@@ -1,7 +1,9 @@
 package ru.alexeypan.wordcards.categories.impl.list
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.category_list.*
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
@@ -34,18 +36,29 @@ class CategoriesActivity : BaseActivity() {
     adapter.setCategoryClickListener { wordListScope.wordListModule().getStarter(this).start(it.id) }
 
     val addCategoryDialog = AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle)
-    addCategoryDialog.addCategoryListener = {categoryName ->
-      dao.save(CategoryDB(categoryName))
+    addCategoryDialog.addCategoryListener = {categoryName, categoryId ->
+      dao.save(CategoryDB(categoryName).apply { if (categoryId != null) id = categoryId })
       adapter.clear()
       dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
     }
     addCategoryDialog.revival()
 
     fabAdd.setOnClickListener { addCategoryDialog.show() }
-    adapter.setEditClickListener { addCategoryDialog.show(it.title) }
-    adapter.setDeleteClickListener { category, position ->
-      dao.remove(category.id)
-      adapter.notifyItemRemoved(position)
+    adapter.setMoreClickListener { view, category, position ->
+      val popupMenu = PopupMenu(this, view)
+      popupMenu.inflate(R.menu.category_item_menu)
+      popupMenu.show()
+      popupMenu.setOnMenuItemClickListener { item: MenuItem? ->
+        when(item?.itemId) {
+          R.id.menuEdit -> addCategoryDialog.show(category)
+          R.id.menuDelete -> {
+            dao.remove(category.id)
+            adapter.removeItem(position)
+          }
+          else -> { }
+        }
+        return@setOnMenuItemClickListener true
+      }
     }
   }
 
