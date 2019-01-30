@@ -18,7 +18,7 @@ import ru.alexeypan.wordcards.core.ui.dialog.Immortal
 import ru.alexeypan.wordcards.core.ui.dialog.ImmortalDialogWidget
 import ru.alexeypan.wordcards.core.ui.state.StateRegistry
 import ru.alexeypan.wordcards.core.ui.state.properties.IntProperty
-import ru.alexeypan.wordcards.core.ui.state.properties.StringProperty
+import ru.alexeypan.wordcards.core.ui.state.properties.ParcelableProperty
 
 class AddCategoryDialogWidget(
   private val context: Context,
@@ -26,18 +26,23 @@ class AddCategoryDialogWidget(
   lifecycle: Lifecycle
 ) : DialogFactory, Immortal {
 
-  var addCategoryListener: ((String, Int?) -> Unit)? = null
+  private var addCategoryListener: ((category: Category, position: Int?) -> Unit)? = null
   private val dialogWidget: ImmortalDialogWidget = ImmortalDialogWidget(this, stateRegistry, lifecycle)
-  private val categoryTitleProp = StringProperty("category_title", "")
-  private val categoryIdProp = IntProperty("category_id")
+  private val categoryProp = ParcelableProperty<Category>("category")
+  private val positionProp = IntProperty("category_position")
 
   init {
-    stateRegistry.register(categoryTitleProp)
+    stateRegistry.register(categoryProp)
+    stateRegistry.register(positionProp)
   }
 
-  fun show(category: Category? = null) {
-    categoryTitleProp.put(category?.title)
-    categoryIdProp.put(category?.id)
+  fun setAddCategoryListener(listener: (category: Category, position: Int?) -> Unit) {
+    addCategoryListener = listener
+  }
+
+  fun show(category: Category? = null, position: Int? = null) {
+    categoryProp.put(category ?: Category(""))
+    positionProp.put(position)
     dialogWidget.show()
   }
 
@@ -49,22 +54,26 @@ class AddCategoryDialogWidget(
     val categoryField = view.findViewById<EditText>(R.id.etCategory)
     val closeButton = view.findViewById<ImageView>(R.id.ivClose)
     val readyButton = view.findViewById<TextView>(R.id.tvReady)
-    categoryField.setText(categoryTitleProp.get())
+    categoryField.setText(categoryProp.get()?.title)
     categoryField.addTextChangedListener(object : TextWatcher {
       override fun afterTextChanged(s: Editable?) {
-        categoryTitleProp.put(s?.toString())
+        categoryProp.get()?.title = s?.toString() ?: ""
       }
       override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
       override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
     })
     closeButton.setOnClickListener { dialogWidget.hide() }
     readyButton.setOnClickListener {
-      addCategoryListener?.invoke(categoryField.text.toString(), categoryIdProp.get())
+      addCategoryListener?.invoke(categoryProp.get()!!, positionProp.get())
       dialogWidget.hide()
     }
     dialog.setContentView(view)
-    dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+    showKeyboard(dialog)
     return dialog
+  }
+
+  private fun showKeyboard(dialog: Dialog) {
+    dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
   }
 
 }

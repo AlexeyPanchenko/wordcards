@@ -2,6 +2,7 @@ package ru.alexeypan.wordcards.categories.impl.list
 
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,52 +19,83 @@ import ru.alexeypan.wordcards.wordlist.api.WordListScope
 
 class CategoriesActivity : BaseActivity() {
 
+  lateinit var dbScope: DBScope
+  lateinit var wordListScope: WordListScope
+
   lateinit var dao: CategoriesDao
+  lateinit var adapter: CategoriesAdapter
+  lateinit var addCategoryDialog: AddCategoryDialogWidget
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    val dbScope: DBScope = Injector.openScope(DBScope::class.java)
-    val wordListScope: WordListScope = Injector.openScope(WordListScope::class.java)
+    dbScope = Injector.openScope(DBScope::class.java)
+    wordListScope = Injector.openScope(WordListScope::class.java)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.category_list)
+
     setSupportActionBar(bottomBar)
     bottomBar.setNavigationOnClickListener { Toast.makeText(this, "REE", Toast.LENGTH_SHORT).show() }
-    rvList.layoutManager = GridLayoutManager(this, 3)
-    val adapter = CategoriesAdapter()
-    rvList.adapter = adapter
+
+    initList()
+
     dao = dbScope.appDatabase()?.categoriesDao()!!
+    rebuildCategories()
 
-    dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
-    adapter.setCategoryClickListener { wordListScope.wordListModule().getStarter(this).start(it.id) }
-
-    val addCategoryDialog = AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle)
-    addCategoryDialog.addCategoryListener = {categoryName, categoryId ->
-      dao.save(CategoryDB(categoryName).apply { if (categoryId != null) id = categoryId })
-      adapter.clear()
-      dao.getAll().forEach { adapter.addItem(Category(it.id, it.title)) }
-    }
-    addCategoryDialog.revival()
-
+    initAddCategoryDialog()
     fabAdd.setOnClickListener { addCategoryDialog.show() }
-    adapter.setMoreClickListener { view, category, position ->
-      val popupMenu = PopupMenu(this, view)
-      popupMenu.inflate(R.menu.category_item_menu)
-      popupMenu.show()
-      popupMenu.setOnMenuItemClickListener { item: MenuItem? ->
-        when(item?.itemId) {
-          R.id.menuEdit -> addCategoryDialog.show(category)
-          R.id.menuDelete -> {
-            dao.remove(category.id)
-            adapter.removeItem(position)
-          }
-          else -> { }
-        }
-        return@setOnMenuItemClickListener true
-      }
-    }
   }
 
   override fun onDestroy() {
     super.onDestroy()
     Injector.closeScope(WordListScope::class.java)
+  }
+
+  private fun showPopupDialog(view: View, category: Category, position: Int) {
+    val popupMenu = PopupMenu(this, view)
+    popupMenu.inflate(R.menu.category_item_menu)
+    popupMenu.setOnMenuItemClickListener { item: MenuItem? ->
+      when (item?.itemId) {
+        R.id.menuEdit -> addCategoryDialog.show(category, position)
+        R.id.menuDelete -> removeCategory(category, position)
+      }
+      return@setOnMenuItemClickListener true
+    }
+    popupMenu.show()
+  }
+
+  private fun initList() {
+    adapter = CategoriesAdapter()
+    adapter.setCategoryClickListener { wordListScope.wordListModule().getStarter(this).start(it.id!!) }
+    adapter.setMoreClickListener { view, category, position -> showPopupDialog(view, category, position) }
+    rvList.adapter = adapter
+    rvList.layoutManager = GridLayoutManager(this, 3)
+  }
+
+  private fun initAddCategoryDialog() {
+    addCategoryDialog = AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle)
+    addCategoryDialog.setAddCategoryListener { category, position ->
+      if (category.title.isEmpty()) {
+        Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show()
+        return@setAddCategoryListener
+      }
+      dao.save(CategoryDB(category.title).apply { if (category.id != null) id = category.id })
+      if (position != null) {
+        adapter.updateItem(category, position)
+      } else {
+        rebuildCategories()
+      }
+    }
+    addCategoryDialog.revival()
+  }
+
+  private fun removeCategory(category: Category, position: Int) {
+    category.id?.let {
+      dao.remove(it)
+      adapter.removeItem(position)
+    }
+  }
+
+  private fun rebuildCategories() {
+    adapter.clear()
+    dao.getAll().forEach { adapter.addItem(Category(it.title, it.id)) }
   }
 }

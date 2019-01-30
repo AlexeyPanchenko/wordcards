@@ -37,6 +37,11 @@ class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
     notifyItemRemoved(position)
   }
 
+  fun updateItem(category: Category, position: Int) {
+    categories[position] = category
+    notifyItemChanged(position, category)
+  }
+
   fun setCategoryClickListener(listener: (category: Category) -> Unit) {
     categoryClickListener = listener
   }
