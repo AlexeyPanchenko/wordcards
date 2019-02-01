@@ -18,7 +18,7 @@ interface CategoriesDao {
   fun save(category: CategoryDB)
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun saveAll(category: List<CategoryDB>)
+  fun saveAll(categories: List<CategoryDB>)
 
   @Query("DELETE FROM categoriesTable WHERE id = :categoryId")
   fun remove(categoryId: Int)

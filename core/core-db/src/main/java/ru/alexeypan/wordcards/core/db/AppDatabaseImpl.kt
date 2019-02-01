@@ -17,7 +17,7 @@ abstract class AppDatabaseImpl : RoomDatabase(), AppDatabase {
   companion object {
     private var instance: AppDatabase? = null
 
-    fun getInstance(context: Context): AppDatabase? {
+    fun getInstance(context: Context): AppDatabase {
       if (instance == null) {
         synchronized(AppDatabase::class) {
           instance = Room
@@ -27,7 +27,7 @@ abstract class AppDatabaseImpl : RoomDatabase(), AppDatabase {
             .build()
         }
       }
-      return instance
+      return instance!!
     }
 
     fun destroyInstance() {

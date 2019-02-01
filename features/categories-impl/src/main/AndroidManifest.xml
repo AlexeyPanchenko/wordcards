@@ -2,7 +2,7 @@
   package="ru.alexeypan.wordcards.categories.impl">
 
   <application>
-    <activity android:name=".list.CategoriesActivity">
+    <activity android:name=".list.ui.CategoriesActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

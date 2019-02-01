@@ -19,5 +19,10 @@ class DBScope(private val context: Context) : Scope {
     AppDatabaseImpl.destroyInstance()
   }
 
-  fun appDatabase(): AppDatabase? = appDatabase
+  fun appDatabase(): AppDatabase {
+    if (appDatabase == null) {
+      throw NullPointerException("Database instance is null! You need open scope DBScope.")
+    }
+    return appDatabase!!
+  }
 }

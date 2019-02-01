@@ -1,32 +1,34 @@
-package ru.alexeypan.wordcards.categories.impl.list
+package ru.alexeypan.wordcards.categories.impl.list.ui
 
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.category_list.*
-import ru.alexeypan.wordcards.categories.db.CategoriesDao
-import ru.alexeypan.wordcards.categories.db.CategoryDB
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.categories.impl.R
 import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogWidget
+import ru.alexeypan.wordcards.categories.impl.list.CategoriesAdapter
 import ru.alexeypan.wordcards.categories.impl.list.drag.DragItemTouchHelperCallback
 import ru.alexeypan.wordcards.core.db.scope.DBScope
+import ru.alexeypan.wordcards.core.ui.AndroidToaster
 import ru.alexeypan.wordcards.core.ui.BaseActivity
 import ru.alexeypan.wordcards.injector.Injector
 import ru.alexeypan.wordcards.wordlist.api.WordListScope
 
-class CategoriesActivity : BaseActivity() {
+class CategoriesActivity : BaseActivity(), CategoriesView {
+
+  companion object {
+    private const val COLUMN_COUNT = 3
+  }
 
   private lateinit var dbScope: DBScope
   private lateinit var wordListScope: WordListScope
 
-  private lateinit var dao: CategoriesDao
   private lateinit var adapter: CategoriesAdapter
-  private lateinit var addCategoryDialog: AddCategoryDialogWidget
+  private lateinit var presenter: CategoriesPresenter
 
   override fun onCreate(savedInstanceState: Bundle?) {
     dbScope = Injector.openScope(DBScope::class.java)
@@ -35,20 +37,38 @@ class CategoriesActivity : BaseActivity() {
     setContentView(R.layout.category_list)
 
     setSupportActionBar(bottomBar)
-    bottomBar.setNavigationOnClickListener { Toast.makeText(this, "REE", Toast.LENGTH_SHORT).show() }
+    bottomBar.setNavigationOnClickListener {  }
 
     initList()
 
-    dao = dbScope.appDatabase()?.categoriesDao()!!
-    rebuildCategories()
+    fabAdd.setOnClickListener { presenter.onAddClicked() }
 
-    initAddCategoryDialog()
-    fabAdd.setOnClickListener { addCategoryDialog.show() }
+    presenter = CategoriesPresenter(
+      AndroidToaster(this),
+      AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle),
+      wordListScope.wordListModule().getStarter(this),
+      dbScope.appDatabase().categoriesDao()
+    )
+    presenter.onVewAttached(this)
+  }
+
+  override fun updateCategory(category: Category, position: Int) {
+    adapter.updateItem(category, position)
+  }
+
+  override fun removeCategoryFromList(position: Int) {
+    adapter.removeItem(position)
+  }
+
+  override fun updateList(categories: List<Category>) {
+    adapter.clear()
+    adapter.setItems(categories)
   }
 
   override fun onDestroy() {
     super.onDestroy()
     Injector.closeScope(WordListScope::class.java)
+    presenter.onVewDetached()
   }
 
   private fun showPopupDialog(view: View, category: Category, position: Int) {
@@ -56,8 +76,8 @@ class CategoriesActivity : BaseActivity() {
     popupMenu.inflate(R.menu.category_item_menu)
     popupMenu.setOnMenuItemClickListener { item: MenuItem? ->
       when (item?.itemId) {
-        R.id.menuEdit -> addCategoryDialog.show(category, position)
-        R.id.menuDelete -> removeCategory(category, position)
+        R.id.menuEdit -> presenter.onEditClicked(category, position)
+        R.id.menuDelete -> presenter.onDeleteClicked(category, position)
       }
       return@setOnMenuItemClickListener true
     }
@@ -66,48 +86,20 @@ class CategoriesActivity : BaseActivity() {
 
   private fun initList() {
     adapter = CategoriesAdapter()
-    adapter.setCategoryClickListener { wordListScope.wordListModule().getStarter(this).start(it.id!!) }
+    adapter.setCategoryClickListener { presenter.onCategoryClicked(it) }
     adapter.setMoreClickListener { view, category, position -> showPopupDialog(view, category, position) }
     rvList.adapter = adapter
-    rvList.layoutManager = GridLayoutManager(this, 3)
+    rvList.layoutManager = GridLayoutManager(this, COLUMN_COUNT)
 
     val touchHelperCallback = DragItemTouchHelperCallback()
     touchHelperCallback.setOnItemDragListener { fromPosition, toPosition ->
       adapter.moveItems(fromPosition, toPosition)
     }
     touchHelperCallback.setOnItemDropListener { fromPosition, toPosition ->
-
+      presenter.onItemDropped(fromPosition, toPosition)
     }
     val touchHelper = ItemTouchHelper(touchHelperCallback)
     touchHelper.attachToRecyclerView(rvList)
   }
 
-  private fun initAddCategoryDialog() {
-    addCategoryDialog = AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle)
-    addCategoryDialog.setAddCategoryListener { category, position ->
-      if (category.title.isEmpty()) {
-        Toast.makeText(this, "Empty", Toast.LENGTH_SHORT).show()
-        return@setAddCategoryListener
-      }
-      dao.save(CategoryDB(category.title).apply { if (category.id != null) id = category.id })
-      if (position != null) {
-        adapter.updateItem(category, position)
-      } else {
-        rebuildCategories()
-      }
-    }
-    addCategoryDialog.revival()
-  }
-
-  private fun removeCategory(category: Category, position: Int) {
-    category.id?.let {
-      dao.remove(it)
-      adapter.removeItem(position)
-    }
-  }
-
-  private fun rebuildCategories() {
-    adapter.clear()
-    dao.getAll().forEach { adapter.addItem(Category(it.title, it.id)) }
-  }
 }
