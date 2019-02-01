@@ -72,9 +72,11 @@ class CategoriesActivity : BaseActivity() {
     rvList.layoutManager = GridLayoutManager(this, 3)
 
     val touchHelperCallback = DragItemTouchHelperCallback()
-    touchHelperCallback.setOnItemMoveListener { fromPosition, toPosition ->
+    touchHelperCallback.setOnItemDragListener { fromPosition, toPosition ->
       adapter.moveItems(fromPosition, toPosition)
-      //dao.moveItems(fromPosition, toPosition)
+    }
+    touchHelperCallback.setOnItemDropListener { fromPosition, toPosition ->
+
     }
     val touchHelper = ItemTouchHelper(touchHelperCallback)
     touchHelper.attachToRecyclerView(rvList)

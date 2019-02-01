@@ -6,11 +6,24 @@ import androidx.recyclerview.widget.RecyclerView
 
 class DragItemTouchHelperCallback : ItemTouchHelper.Callback() {
 
-  private var itemMoveListener: ((fromPosition: Int, toPosition: Int) -> Unit)? = null
+  companion object {
+    private const val NO_POSITION = -1
+  }
+
+  private var itemDragListener: ((fromPosition: Int, toPosition: Int) -> Unit)? = null
+  private var itemDropListener: ((fromPosition: Int, toPosition: Int) -> Unit)? = null
+
   private var itemSwipeListener: ((position: Int) -> Unit)? = null
 
-  fun setOnItemMoveListener(listener: (fromPosition: Int, toPosition: Int) -> Unit) {
-    itemMoveListener = listener
+  private var fromPosition = NO_POSITION
+  private var toPosition = NO_POSITION
+
+  fun setOnItemDragListener(listener: (fromPosition: Int, toPosition: Int) -> Unit) {
+    itemDragListener = listener
+  }
+
+  fun setOnItemDropListener(listener: (fromPosition: Int, toPosition: Int) -> Unit) {
+    itemDropListener = listener
   }
 
   override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
@@ -30,7 +43,14 @@ class DragItemTouchHelperCallback : ItemTouchHelper.Callback() {
     if (viewHolder.itemViewType != target.itemViewType) {
       return false
     }
-    itemMoveListener?.invoke(viewHolder.adapterPosition, target.adapterPosition)
+    val from = viewHolder.adapterPosition
+    val to = target.adapterPosition
+
+    if (fromPosition == NO_POSITION) {
+      fromPosition = from
+    }
+    toPosition = to
+    itemDragListener?.invoke(from, to)
     return true
   }
 
@@ -39,7 +59,7 @@ class DragItemTouchHelperCallback : ItemTouchHelper.Callback() {
   }
 
   override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-    if (actionState == ItemTouchHelper.ACTION_STATE_DRAG && viewHolder is DraggableViewHolder) {
+    if (actionState != ItemTouchHelper.ACTION_STATE_IDLE && viewHolder is DraggableViewHolder) {
       (viewHolder as DraggableViewHolder).onItemSelected()
     }
     super.onSelectedChanged(viewHolder, actionState)
@@ -49,6 +69,12 @@ class DragItemTouchHelperCallback : ItemTouchHelper.Callback() {
     super.clearView(recyclerView, viewHolder)
     if (viewHolder is DraggableViewHolder) {
       (viewHolder as DraggableViewHolder).onItemCleared()
+
+      if(fromPosition != NO_POSITION && toPosition != NO_POSITION && fromPosition != toPosition) {
+        itemDropListener?.invoke(fromPosition, toPosition)
+      }
+      fromPosition = NO_POSITION
+      toPosition = NO_POSITION
     }
   }
 
