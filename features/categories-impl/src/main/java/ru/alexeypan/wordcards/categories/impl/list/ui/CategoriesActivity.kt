@@ -13,10 +13,8 @@ import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogWidget
 import ru.alexeypan.wordcards.categories.impl.list.CategoriesAdapter
 import ru.alexeypan.wordcards.categories.impl.list.drag.DragItemTouchHelperCallback
 import ru.alexeypan.wordcards.core.db.scope.DBScope
-import ru.alexeypan.wordcards.core.ui.AndroidToaster
 import ru.alexeypan.wordcards.core.ui.BaseActivity
 import ru.alexeypan.wordcards.injector.Injector
-import ru.alexeypan.wordcards.wordlist.api.WordListScope
 
 class CategoriesActivity : BaseActivity(), CategoriesView {
 
@@ -24,32 +22,23 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
     private const val COLUMN_COUNT = 3
   }
 
-  private lateinit var dbScope: DBScope
-  private lateinit var wordListScope: WordListScope
+  private lateinit var presenterScope: CategoriesPresenterScope
+  private lateinit var categoriesScope: CategoriesScope
 
   private lateinit var adapter: CategoriesAdapter
   private lateinit var presenter: CategoriesPresenter
+  private lateinit var addCategoryDialogWidget: AddCategoryDialogWidget
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    dbScope = Injector.openScope(DBScope::class.java)
-    wordListScope = Injector.openScope(WordListScope::class.java)
     super.onCreate(savedInstanceState)
     setContentView(R.layout.category_list)
-
+    initScopes()
     setSupportActionBar(bottomBar)
     bottomBar.setNavigationOnClickListener {  }
-
     initList()
-
     fabAdd.setOnClickListener { presenter.onAddClicked() }
-
-    presenter = CategoriesPresenter(
-      AndroidToaster(this),
-      AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle),
-      wordListScope.wordListModule().getStarter(this),
-      dbScope.appDatabase().categoriesDao()
-    )
-    presenter.onVewAttached(this)
+    initAddCategoryDialog()
+    initPresenter()
   }
 
   override fun updateCategory(category: Category, position: Int) {
@@ -61,27 +50,24 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
   }
 
   override fun updateList(categories: List<Category>) {
-    adapter.clear()
     adapter.setItems(categories)
+  }
+
+  override fun openAddCategory(category: Category?, position: Int?) {
+    addCategoryDialogWidget.show(category, position)
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    Injector.closeScope(WordListScope::class.java)
     presenter.onVewDetached()
+    closeScopes()
   }
 
-  private fun showPopupDialog(view: View, category: Category, position: Int) {
-    val popupMenu = PopupMenu(this, view)
-    popupMenu.inflate(R.menu.category_item_menu)
-    popupMenu.setOnMenuItemClickListener { item: MenuItem? ->
-      when (item?.itemId) {
-        R.id.menuEdit -> presenter.onEditClicked(category, position)
-        R.id.menuDelete -> presenter.onDeleteClicked(category, position)
-      }
-      return@setOnMenuItemClickListener true
-    }
-    popupMenu.show()
+  private fun initScopes() {
+    categoriesScope = Injector.openScope(CategoriesScope::class.java, CategoriesScope(this), true)
+    presenterScope = Injector.openScope(
+      CategoriesPresenterScope::class.java, CategoriesPresenterScope(Injector.openScope(DBScope::class.java))
+    )
   }
 
   private fun initList() {
@@ -100,6 +86,39 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
     }
     val touchHelper = ItemTouchHelper(touchHelperCallback)
     touchHelper.attachToRecyclerView(rvList)
+  }
+
+  private fun showPopupDialog(view: View, category: Category, position: Int) {
+    val popupMenu = PopupMenu(this, view)
+    popupMenu.inflate(R.menu.category_item_menu)
+    popupMenu.setOnMenuItemClickListener { item: MenuItem? ->
+      when (item?.itemId) {
+        R.id.menuEdit -> presenter.onEditClicked(category, position)
+        R.id.menuDelete -> presenter.onDeleteClicked(category, position)
+      }
+      return@setOnMenuItemClickListener true
+    }
+    popupMenu.show()
+  }
+
+  private fun initAddCategoryDialog() {
+    addCategoryDialogWidget = AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle)
+    addCategoryDialogWidget.setAddCategoryListener { category, position ->
+      presenter.onCategoryEdited(category, position)
+    }
+    addCategoryDialogWidget.revival()
+  }
+
+  private fun initPresenter() {
+    presenter = presenterScope.presenter(categoriesScope)
+    presenter.onVewAttached(this)
+  }
+
+  private fun closeScopes() {
+    Injector.closeScope(CategoriesScope::class.java, true)
+    if (isFinishing) {
+      Injector.closeScope(CategoriesPresenterScope::class.java, true)
+    }
   }
 
 }

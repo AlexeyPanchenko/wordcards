@@ -3,32 +3,20 @@ package ru.alexeypan.wordcards.categories.impl.list.ui
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
 import ru.alexeypan.wordcards.categories.db.CategoryDB
 import ru.alexeypan.wordcards.categories.impl.Category
-import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogWidget
 import ru.alexeypan.wordcards.core.ui.Toaster
 import ru.alexeypan.wordcards.core.ui.mvp.BasePresenter
 import ru.alexeypan.wordcards.wordlist.api.WordListStarter
 
 class CategoriesPresenter(
-  private val toaster: Toaster,
-  private val addCategoryDialog: AddCategoryDialogWidget,
-  private val wordListStarter: WordListStarter,
   private val categoriesDao: CategoriesDao
 ) : BasePresenter<CategoriesView>() {
 
-  init {
-    addCategoryDialog.setAddCategoryListener { category, position ->
-      if (category.title.isEmpty()) {
-        toaster.show("Empty")
-        return@setAddCategoryListener
-      }
-      categoriesDao.save(CategoryDB(category.title).apply { if (category.id != null) id = category.id })
-      if (position != null) {
-        view?.updateCategory(category, position)
-      } else {
-        updateCategories()
-      }
-    }
-    addCategoryDialog.revival()
+  private var toaster: Toaster? = null
+  private var wordListStarter: WordListStarter? = null
+
+  fun init(toaster: Toaster, wordListStarter: WordListStarter) {
+    this.toaster = toaster
+    this.wordListStarter = wordListStarter
   }
 
   override fun onVewAttached(view: CategoriesView) {
@@ -36,8 +24,14 @@ class CategoriesPresenter(
     updateCategories()
   }
 
+  override fun onVewDetached() {
+    super.onVewDetached()
+    this.toaster = null
+    this.wordListStarter = null
+  }
+
   fun onAddClicked() {
-    addCategoryDialog.show()
+    view?.openAddCategory()
   }
 
   fun onDeleteClicked(category: Category, position: Int) {
@@ -48,7 +42,7 @@ class CategoriesPresenter(
   }
 
   fun onEditClicked(category: Category, position: Int) {
-    addCategoryDialog.show(category, position)
+    view?.openAddCategory(category, position)
   }
 
   fun onItemDropped(fromPosition: Int, toPosition: Int) {
@@ -61,7 +55,20 @@ class CategoriesPresenter(
   }
 
   fun onCategoryClicked(category: Category) {
-    wordListStarter.start(category.id!!)
+    wordListStarter?.start(category.id!!)
+  }
+
+  fun onCategoryEdited(category: Category, position: Int?) {
+    if (category.title.isEmpty()) {
+        toaster?.show("Empty")
+        return
+      }
+      categoriesDao.save(CategoryDB(category.title).apply { if (category.id != null) id = category.id })
+      if (position != null) {
+        view?.updateCategory(category, position)
+      } else {
+        updateCategories()
+      }
   }
 
 }
