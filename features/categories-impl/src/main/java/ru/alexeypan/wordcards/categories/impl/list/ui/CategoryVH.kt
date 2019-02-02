@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.categories.impl.list
+package ru.alexeypan.wordcards.categories.impl.list.ui
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexeypan.wordcards.categories.impl.R
-import ru.alexeypan.wordcards.categories.impl.list.drag.DraggableViewHolder
+import ru.alexeypan.wordcards.categories.impl.list.ui.drag.DraggableViewHolder
 
 internal class CategoryVH(itemView: View) : RecyclerView.ViewHolder(itemView), DraggableViewHolder {
 

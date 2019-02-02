@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.categories.impl.list
+package ru.alexeypan.wordcards.categories.impl.list.ui
 
 import android.view.LayoutInflater
 import android.view.View

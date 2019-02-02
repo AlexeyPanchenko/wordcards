@@ -10,8 +10,7 @@ import kotlinx.android.synthetic.main.category_list.*
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.categories.impl.R
 import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogWidget
-import ru.alexeypan.wordcards.categories.impl.list.CategoriesAdapter
-import ru.alexeypan.wordcards.categories.impl.list.drag.DragItemTouchHelperCallback
+import ru.alexeypan.wordcards.categories.impl.list.ui.drag.DragItemTouchHelperCallback
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.core.ui.BaseActivity
 import ru.alexeypan.wordcards.injector.Injector

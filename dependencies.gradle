@@ -4,7 +4,7 @@ ext.versions = [
   'compileSdk'            : 28,
   'targetSdk'             : 28,
 
-  'androidPlugin'         : '3.2.1',
+  'androidPlugin'         : '3.3.0',
   'kotlin'                : '1.3.11',
 
   'androidx'              : '1.0.0',

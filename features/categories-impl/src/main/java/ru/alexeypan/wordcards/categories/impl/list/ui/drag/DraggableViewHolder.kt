@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.categories.impl.list.drag
+package ru.alexeypan.wordcards.categories.impl.list.ui.drag
 
 interface DraggableViewHolder {
   fun onItemSelected()
