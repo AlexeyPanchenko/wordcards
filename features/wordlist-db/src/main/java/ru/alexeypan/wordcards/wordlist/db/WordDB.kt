@@ -9,10 +9,10 @@ import androidx.room.PrimaryKey
   indices = [Index("categoryId")]
 )
 data class WordDB(
-  val categoryId: Int,
+  val categoryId: Long,
   val original: String,
   val translate: String
 ) {
   @PrimaryKey(autoGenerate = true)
-  var id: Int = 0
+  var id: Long = 0
 }

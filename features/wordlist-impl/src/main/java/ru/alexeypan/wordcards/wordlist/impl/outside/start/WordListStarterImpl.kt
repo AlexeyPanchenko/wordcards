@@ -8,7 +8,7 @@ class WordListStarterImpl(
   private val activity: AppCompatActivity
 ) : WordListStarter {
 
-  override fun start(categoryId: Int) {
+  override fun start(categoryId: Long) {
     activity.startActivity(WordListActivity.newIntent(activity, categoryId))
   }
 }

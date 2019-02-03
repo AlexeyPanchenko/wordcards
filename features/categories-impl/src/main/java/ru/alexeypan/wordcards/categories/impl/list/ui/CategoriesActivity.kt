@@ -10,6 +10,8 @@ import kotlinx.android.synthetic.main.category_list.*
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.categories.impl.R
 import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogWidget
+import ru.alexeypan.wordcards.categories.impl.list.ui.adapter.CategoriesAdapter
+import ru.alexeypan.wordcards.categories.impl.list.ui.adapter.CategoriesProvider
 import ru.alexeypan.wordcards.categories.impl.list.ui.drag.DragItemTouchHelperCallback
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.core.ui.BaseActivity
@@ -41,18 +43,22 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
   }
 
   override fun updateCategory(category: Category, position: Int) {
-    adapter.updateItem(category, position)
+    adapter.notifyItemChanged(position, category)
   }
 
   override fun removeCategoryFromList(position: Int) {
-    adapter.removeItem(position)
+    adapter.notifyItemRemoved(position)
   }
 
   override fun updateList(categories: List<Category>) {
-    adapter.setItems(categories)
+    adapter.notifyDataSetChanged()
   }
 
-  override fun openAddCategory(category: Category?, position: Int?) {
+  override fun moveItems(fromPosition: Int, toPosition: Int) {
+    adapter.notifyItemMoved(fromPosition, toPosition)
+  }
+
+  override fun openAddCategory(category: Category, position: Int?) {
     addCategoryDialogWidget.show(category, position)
   }
 
@@ -73,12 +79,17 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
     adapter = CategoriesAdapter()
     adapter.setCategoryClickListener { presenter.onCategoryClicked(it) }
     adapter.setMoreClickListener { view, category, position -> showPopupDialog(view, category, position) }
+    adapter.setCategoriesProvider(object : CategoriesProvider {
+      override fun getCategories(): List<Category> {
+        return presenter.provideCategories()
+      }
+    })
     rvList.adapter = adapter
     rvList.layoutManager = GridLayoutManager(this, COLUMN_COUNT)
 
     val touchHelperCallback = DragItemTouchHelperCallback()
     touchHelperCallback.setOnItemDragListener { fromPosition, toPosition ->
-      adapter.moveItems(fromPosition, toPosition)
+      presenter.onItemMove(fromPosition, toPosition)
     }
     touchHelperCallback.setOnItemDropListener { fromPosition, toPosition ->
       presenter.onItemDropped(fromPosition, toPosition)

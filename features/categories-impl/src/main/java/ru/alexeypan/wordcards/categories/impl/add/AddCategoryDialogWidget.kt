@@ -40,8 +40,8 @@ class AddCategoryDialogWidget(
     addCategoryListener = listener
   }
 
-  fun show(category: Category? = null, position: Int? = null) {
-    categoryProp.put(category ?: Category(""))
+  fun show(category: Category, position: Int? = null) {
+    categoryProp.put(category)
     positionProp.put(position)
     dialogWidget.show()
   }

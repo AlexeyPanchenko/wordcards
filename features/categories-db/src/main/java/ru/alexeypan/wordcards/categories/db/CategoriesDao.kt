@@ -12,14 +12,14 @@ interface CategoriesDao {
   fun getAll(): List<CategoryDB>
 
   @Query("SELECT * from categoriesTable WHERE id LIKE :id LIMIT 1")
-  fun get(id: Int): CategoryDB
+  fun get(id: Long): CategoryDB
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun save(category: CategoryDB)
+  fun save(category: CategoryDB): Long
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun saveAll(categories: List<CategoryDB>)
 
   @Query("DELETE FROM categoriesTable WHERE id = :categoryId")
-  fun remove(categoryId: Int)
+  fun remove(categoryId: Long)
 }

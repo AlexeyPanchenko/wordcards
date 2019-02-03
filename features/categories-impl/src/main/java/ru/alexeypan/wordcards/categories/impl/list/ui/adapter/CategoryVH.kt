@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.categories.impl.list.ui
+package ru.alexeypan.wordcards.categories.impl.list.ui.adapter
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter

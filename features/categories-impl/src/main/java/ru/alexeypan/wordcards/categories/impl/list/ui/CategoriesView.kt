@@ -7,5 +7,6 @@ interface CategoriesView : BaseView {
   fun updateCategory(category: Category, position: Int)
   fun removeCategoryFromList(position: Int)
   fun updateList(categories: List<Category>)
-  fun openAddCategory(category: Category? = null, position: Int? = null)
+  fun openAddCategory(category: Category, position: Int? = null)
+  fun moveItems(fromPosition: Int, toPosition: Int)
 }

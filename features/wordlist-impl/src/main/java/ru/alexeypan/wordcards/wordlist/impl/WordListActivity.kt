@@ -22,7 +22,7 @@ class WordListActivity : BaseActivity() {
   companion object {
     private const val CATEGORY_ID = "category_id"
 
-    fun newIntent(context: Context, categoryId: Int): Intent {
+    fun newIntent(context: Context, categoryId: Long): Intent {
       val intent = Intent(context, WordListActivity::class.java)
       intent.putExtra(CATEGORY_ID, categoryId)
       return intent
@@ -45,9 +45,9 @@ class WordListActivity : BaseActivity() {
     helper.attachToRecyclerView(rvList)
     rvList.layoutManager = lm
 
-    val categoryId = intent.getIntExtra(CATEGORY_ID, -1)
+    val categoryId = intent.getLongExtra(CATEGORY_ID, -1)
     Toast.makeText(this, "Id = $categoryId", Toast.LENGTH_SHORT).show()
-    dao = dbScope.appDatabase()?.wordsDao()!!
+    dao = dbScope.appDatabase().wordsDao()
     dao.getAll(categoryId).forEach {
       adapter.addItem(Word(it.original, it.translate))
     }
