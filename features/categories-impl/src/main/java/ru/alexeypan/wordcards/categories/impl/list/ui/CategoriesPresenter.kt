@@ -1,15 +1,15 @@
 package ru.alexeypan.wordcards.categories.impl.list.ui
 
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
-import ru.alexeypan.wordcards.categories.db.CategoryDB
 import ru.alexeypan.wordcards.categories.impl.Category
-import ru.alexeypan.wordcards.core.ui.Toaster
 import ru.alexeypan.wordcards.core.ui.mvp.BasePresenter
+import ru.alexeypan.wordcards.core.ui.toaster.Toaster
+import ru.alexeypan.wordcards.core.ui.utils.CollectionUtils
 import ru.alexeypan.wordcards.wordlist.api.WordListStarter
-import java.util.*
 
 class CategoriesPresenter(
-  private val categoriesDao: CategoriesDao
+  private val categoriesDao: CategoriesDao,
+  private val categoryMapper: CategoryMapper
 ) : BasePresenter<CategoriesView>() {
 
   private var toaster: Toaster? = null
@@ -48,12 +48,12 @@ class CategoriesPresenter(
   }
 
   fun onItemMove(fromPosition: Int, toPosition: Int) {
-    Collections.swap(categories, fromPosition, toPosition)
-    view?.moveItems(fromPosition, toPosition)
+    view?.moveCategories(fromPosition, toPosition)
   }
 
   fun onItemDropped(fromPosition: Int, toPosition: Int) {
-
+    CollectionUtils.moveItem(categories, fromPosition, toPosition)
+    categoriesDao.saveAll(categoryMapper.toDB(categories))
   }
 
   fun provideCategories(): List<Category> {
@@ -62,7 +62,7 @@ class CategoriesPresenter(
 
   private fun updateCategories() {
     if (categories.isEmpty()) {
-      categoriesDao.getAll().forEach { categories.add(Category(it.id, it.title)) }
+      categoriesDao.getAll().forEach { categories.add(Category(it.id, it.title, it.image, it.wordsCount)) }
     }
     view?.updateList(categories)
   }
@@ -77,15 +77,13 @@ class CategoriesPresenter(
       return
     }
     val correctPosition: Int = position ?: categories.size
-    val databaseCategory = CategoryDB(category.title, correctPosition)
-    if (category.id != Category.NO_ID) {
-      databaseCategory.id = category.id
-      val categoryId = categoriesDao.save(databaseCategory)
-      category.id = categoryId
-      categories[correctPosition] = category
+    val databaseCategory = categoryMapper.toDB(category, correctPosition)
+    val categoryId = categoriesDao.save(databaseCategory)
+    if (category.existsId()) {
+      categories.set(correctPosition, category)
     } else {
-      categoriesDao.save(databaseCategory)
-      categories.add(correctPosition, category)
+      category.id = categoryId
+      categories.add(category)
     }
     view?.updateCategory(category, correctPosition)
   }

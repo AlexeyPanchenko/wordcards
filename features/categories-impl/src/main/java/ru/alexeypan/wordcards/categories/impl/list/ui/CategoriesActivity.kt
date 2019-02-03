@@ -54,7 +54,7 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
     adapter.notifyDataSetChanged()
   }
 
-  override fun moveItems(fromPosition: Int, toPosition: Int) {
+  override fun moveCategories(fromPosition: Int, toPosition: Int) {
     adapter.notifyItemMoved(fromPosition, toPosition)
   }
 
@@ -71,7 +71,8 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
   private fun initScopes() {
     categoriesScope = Injector.openScope(CategoriesScope::class.java, CategoriesScope(this), true)
     presenterScope = Injector.openScope(
-      CategoriesPresenterScope::class.java, CategoriesPresenterScope(Injector.openScope(DBScope::class.java))
+      CategoriesPresenterScope::class.java,
+      CategoriesPresenterScope(Injector.openScope(DBScope::class.java), CategoryMapper())
     )
   }
 

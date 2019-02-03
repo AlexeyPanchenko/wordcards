@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.core.ui
+package ru.alexeypan.wordcards.core.ui.toaster
 
 import android.content.Context
 import android.widget.Toast
