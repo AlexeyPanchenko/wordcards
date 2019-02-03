@@ -1,5 +1,9 @@
 package ru.alexeypan.wordcards.categories.impl.list.ui
 
+import io.reactivex.Completable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.core.ui.mvp.BasePresenter
@@ -39,7 +43,10 @@ class CategoriesPresenter(
 
   fun onDeleteClicked(category: Category, position: Int) {
     categories.removeAt(position)
-    categoriesDao.remove(category.id)
+    Completable
+      .fromAction { categoriesDao.remove(category.id) }
+      .subscribeOn(Schedulers.io())
+      .subscribe()
     view?.removeCategoryFromList(position)
   }
 
@@ -52,8 +59,12 @@ class CategoriesPresenter(
   }
 
   fun onItemDropped(fromPosition: Int, toPosition: Int) {
-    CollectionUtils.moveItem(categories, fromPosition, toPosition)
-    categoriesDao.saveAll(categoryMapper.toDB(categories))
+    Completable.fromAction {
+      CollectionUtils.moveItem(categories, fromPosition, toPosition)
+      categoriesDao.saveAll(categoryMapper.toDB(categories))
+    }
+      .subscribeOn(Schedulers.io())
+      .subscribe()
   }
 
   fun provideCategories(): List<Category> {
@@ -62,9 +73,27 @@ class CategoriesPresenter(
 
   private fun updateCategories() {
     if (categories.isEmpty()) {
-      categoriesDao.getAll().forEach { categories.add(Category(it.id, it.title, it.image, it.wordsCount)) }
+      val disposable = Single.fromCallable<List<Category>> {
+        categoriesDao.getAll().map { Category(it.id, it.title, it.image, it.wordsCount) }
+      }
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .doOnSubscribe { toaster?.show("Loading") }
+        .subscribe(
+          {categoryList ->
+            categories.clear()
+            categories.addAll(categoryList)
+            view?.updateList(categories)
+          },
+          {
+            toaster?.show("Error")
+          }
+        )
+
+      //categoriesDao.getAll().forEach { categories.add(Category(it.id, it.title, it.image, it.wordsCount)) }
+    } else{
+      view?.updateList(categories)
     }
-    view?.updateList(categories)
   }
 
   fun onCategoryClicked(category: Category) {
@@ -78,14 +107,22 @@ class CategoriesPresenter(
     }
     val correctPosition: Int = position ?: categories.size
     val databaseCategory = categoryMapper.toDB(category, correctPosition)
-    val categoryId = categoriesDao.save(databaseCategory)
-    if (category.existsId()) {
-      categories.set(correctPosition, category)
-    } else {
-      category.id = categoryId
-      categories.add(category)
-    }
-    view?.updateCategory(category, correctPosition)
+    val disposable = Single
+      .fromCallable<Long> { categoriesDao.save(databaseCategory) }
+      .subscribeOn(Schedulers.io())
+      .observeOn(AndroidSchedulers.mainThread())
+      .subscribe(
+        {id ->
+          if (category.existsId()) {
+            categories.set(correctPosition, category)
+          } else {
+            category.id = id
+            categories.add(category)
+          }
+          view?.updateCategory(category, correctPosition)
+        },
+        {}
+      )
   }
 
 }
