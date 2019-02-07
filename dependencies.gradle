@@ -5,7 +5,10 @@ ext.versions = [
   'targetSdk'             : 28,
 
   'androidPlugin'         : '3.3.0',
-  'kotlin'                : '1.3.11',
+  'kotlin'                : '1.3.20',
+
+  'coroutines'            : '1.1.1',
+  'coroutinesAndroid'     : '1.1.1',
 
   'rxJava'                : '2.2.6',
   'rxAndroid'             : '2.1.0',
@@ -36,6 +39,8 @@ ext.deps = [
   'kotlin': [
     'plugin'              : "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}",
     'lib8'                : "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${versions.kotlin}",
+    'coroutines'          : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
+    'coroutinesAndroid'   : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutinesAndroid}",
   ],
   'rx': [
     'rxJava'              : "io.reactivex.rxjava2:rxjava:${versions.rxJava}",
@@ -69,6 +74,10 @@ ext.depsPack = [
   rx: [
     ext.deps.rx.rxJava,
     ext.deps.rx.rxAndroid
+  ],
+  coroutines: [
+    ext.deps.kotlin.coroutines,
+    ext.deps.kotlin.coroutinesAndroid
   ],
   androidTest: [
     deps.test.runner,
