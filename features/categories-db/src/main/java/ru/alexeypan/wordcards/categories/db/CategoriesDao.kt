@@ -1,6 +1,9 @@
 package ru.alexeypan.wordcards.categories.db
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 
 @Dao
 interface CategoriesDao {
@@ -16,9 +19,6 @@ interface CategoriesDao {
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun saveAll(categories: List<CategoryDB>)
-
-  @Update(onConflict = OnConflictStrategy.REPLACE)
-  fun updateAll(categories: List<CategoryDB>)
 
   @Query("DELETE FROM categoriesTable WHERE id = :categoryId")
   fun remove(categoryId: Long)

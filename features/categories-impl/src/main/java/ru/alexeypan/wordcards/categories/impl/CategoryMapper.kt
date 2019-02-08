@@ -1,7 +1,6 @@
-package ru.alexeypan.wordcards.categories.impl.list.ui
+package ru.alexeypan.wordcards.categories.impl
 
 import ru.alexeypan.wordcards.categories.db.CategoryDB
-import ru.alexeypan.wordcards.categories.impl.Category
 
 class CategoryMapper {
 
@@ -15,5 +14,13 @@ class CategoryMapper {
 
   fun toDB(categories: List<Category>): List<CategoryDB> {
     return categories.mapIndexed { index: Int, category: Category -> toDB(category, index) }
+  }
+
+  fun fromDB(categoryDB: CategoryDB): Category {
+    return Category(categoryDB.id, categoryDB.title, categoryDB.image, categoryDB.wordsCount)
+  }
+
+  fun fromDB(categories: List<CategoryDB>): List<Category> {
+    return categories.map { category: CategoryDB -> fromDB(category) }
   }
 }

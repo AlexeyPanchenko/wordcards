@@ -7,16 +7,21 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.category_list.*
+import ru.alexeypan.wordcards.categories.db.CategoriesDao
 import ru.alexeypan.wordcards.categories.impl.Category
+import ru.alexeypan.wordcards.categories.impl.CategoryMapper
 import ru.alexeypan.wordcards.categories.impl.R
 import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogWidget
+import ru.alexeypan.wordcards.categories.impl.data.CategoriesRepository
 import ru.alexeypan.wordcards.categories.impl.list.ui.adapter.CategoriesAdapter
 import ru.alexeypan.wordcards.categories.impl.list.ui.adapter.CategoriesProvider
 import ru.alexeypan.wordcards.categories.impl.list.ui.drag.DragItemTouchHelperCallback
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.core.ui.BaseActivity
 import ru.alexeypan.wordcards.core.ui.coroutines.BaseDispatcherProvider
+import ru.alexeypan.wordcards.core.ui.toaster.Toaster
 import ru.alexeypan.wordcards.injector.Injector
+import ru.alexeypan.wordcards.wordlist.api.WordListStarter
 
 class CategoriesActivity : BaseActivity(), CategoriesView {
 
@@ -63,6 +68,10 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
     addCategoryDialogWidget.show(category, position)
   }
 
+  override fun toaster(): Toaster = categoriesScope.toaster()
+
+  override fun wordListStarter(): WordListStarter = categoriesScope.wordListStarter()
+
   override fun onDestroy() {
     super.onDestroy()
     presenter.onVewDetached()
@@ -70,10 +79,11 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
   }
 
   private fun initScopes() {
+    val categoriesDao: CategoriesDao = Injector.openScope(DBScope::class.java).appDatabase().categoriesDao()
     categoriesScope = Injector.openScope(CategoriesScope::class.java, CategoriesScope(this), true)
     presenterScope = Injector.openScope(
       CategoriesPresenterScope::class.java,
-      CategoriesPresenterScope(Injector.openScope(DBScope::class.java), CategoryMapper(), BaseDispatcherProvider())
+      CategoriesPresenterScope(CategoriesRepository(categoriesDao), CategoryMapper(), BaseDispatcherProvider())
     )
   }
 
@@ -122,7 +132,7 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
   }
 
   private fun initPresenter() {
-    presenter = presenterScope.presenter(categoriesScope)
+    presenter = presenterScope.presenter()
     presenter.onVewAttached(this)
   }
 
