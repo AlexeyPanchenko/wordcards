@@ -5,11 +5,13 @@ import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.View
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Lifecycle
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.categories.impl.R
@@ -19,6 +21,7 @@ import ru.alexeypan.wordcards.core.ui.dialog.ImmortalDialogWidget
 import ru.alexeypan.wordcards.core.ui.state.StateRegistry
 import ru.alexeypan.wordcards.core.ui.state.properties.IntProperty
 import ru.alexeypan.wordcards.core.ui.state.properties.ParcelableProperty
+
 
 class AddCategoryDialogWidget(
   private val context: Context,
@@ -69,11 +72,17 @@ class AddCategoryDialogWidget(
     }
     dialog.setContentView(view)
     showKeyboard(dialog)
+    expandDialog(view, dialog)
     return dialog
   }
 
   private fun showKeyboard(dialog: Dialog) {
     dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+  }
+
+  private fun expandDialog(view: View, dialog: BottomSheetDialog) {
+    val behavior = BottomSheetBehavior.from<View>(view.parent as View)
+    dialog.setOnShowListener { behavior.setPeekHeight(view.height) }
   }
 
 }
