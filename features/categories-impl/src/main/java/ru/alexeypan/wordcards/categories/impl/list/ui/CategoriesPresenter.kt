@@ -1,11 +1,10 @@
 package ru.alexeypan.wordcards.categories.impl.list.ui
 
-import io.reactivex.Completable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.alexeypan.wordcards.categories.db.CategoriesDao
 import ru.alexeypan.wordcards.categories.impl.Category
+import ru.alexeypan.wordcards.core.ui.coroutines.DispatcherProvider
 import ru.alexeypan.wordcards.core.ui.mvp.BasePresenter
 import ru.alexeypan.wordcards.core.ui.toaster.Toaster
 import ru.alexeypan.wordcards.core.ui.utils.CollectionUtils
@@ -13,8 +12,9 @@ import ru.alexeypan.wordcards.wordlist.api.WordListStarter
 
 class CategoriesPresenter(
   private val categoriesDao: CategoriesDao,
-  private val categoryMapper: CategoryMapper
-) : BasePresenter<CategoriesView>() {
+  private val categoryMapper: CategoryMapper,
+  dispatcherProvider: DispatcherProvider
+) : BasePresenter<CategoriesView>(dispatcherProvider) {
 
   private var toaster: Toaster? = null
   private var wordListStarter: WordListStarter? = null
@@ -43,10 +43,9 @@ class CategoriesPresenter(
 
   fun onDeleteClicked(category: Category, position: Int) {
     categories.removeAt(position)
-    Completable
-      .fromAction { categoriesDao.remove(category.id) }
-      .subscribeOn(Schedulers.io())
-      .subscribe()
+    backgroundScope.launch {
+      categoriesDao.remove(category.id)
+    }
     view?.removeCategoryFromList(position)
   }
 
@@ -59,12 +58,10 @@ class CategoriesPresenter(
   }
 
   fun onItemDropped(fromPosition: Int, toPosition: Int) {
-    Completable.fromAction {
+    backgroundScope.launch {
       CollectionUtils.moveItem(categories, fromPosition, toPosition)
       categoriesDao.saveAll(categoryMapper.toDB(categories))
     }
-      .subscribeOn(Schedulers.io())
-      .subscribe()
   }
 
   fun provideCategories(): List<Category> {
@@ -73,24 +70,18 @@ class CategoriesPresenter(
 
   private fun updateCategories() {
     if (categories.isEmpty()) {
-      val disposable = Single.fromCallable<List<Category>> {
-        categoriesDao.getAll().map { Category(it.id, it.title, it.image, it.wordsCount) }
-      }
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .doOnSubscribe { toaster?.show("Loading") }
-        .subscribe(
-          {categoryList ->
-            categories.clear()
-            categories.addAll(categoryList)
-            view?.updateList(categories)
-          },
-          {
-            toaster?.show("Error")
+      mainScope.launch {
+        try {
+          val categoryList: List<Category> = withContext(dispatcherProvider.background) {
+            return@withContext categoriesDao.getAll().map { Category(it.id, it.title, it.image, it.wordsCount) }
           }
-        )
-
-      //categoriesDao.getAll().forEach { categories.add(Category(it.id, it.title, it.image, it.wordsCount)) }
+          categories.clear()
+          categories.addAll(categoryList)
+          view?.updateList(categories)
+        } catch (e: Exception) {
+          toaster?.show("Error")
+        }
+      }
     } else{
       view?.updateList(categories)
     }
@@ -106,23 +97,20 @@ class CategoriesPresenter(
       return
     }
     val correctPosition: Int = position ?: categories.size
-    val databaseCategory = categoryMapper.toDB(category, correctPosition)
-    val disposable = Single
-      .fromCallable<Long> { categoriesDao.save(databaseCategory) }
-      .subscribeOn(Schedulers.io())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(
-        {id ->
-          if (category.existsId()) {
-            categories.set(correctPosition, category)
-          } else {
-            category.id = id
-            categories.add(category)
-          }
-          view?.updateCategory(category, correctPosition)
-        },
-        {}
-      )
+    mainScope.launch {
+      val id: Long = withContext(dispatcherProvider.background) {
+        val databaseCategory = categoryMapper.toDB(category, correctPosition)
+        return@withContext categoriesDao.save(databaseCategory)
+      }
+
+      if (category.existsId()) {
+        categories.set(correctPosition, category)
+      } else {
+        category.id = id
+        categories.add(category)
+      }
+      view?.updateCategory(category, correctPosition)
+    }
   }
 
 }

@@ -10,9 +10,6 @@ ext.versions = [
   'coroutines'            : '1.1.1',
   'coroutinesAndroid'     : '1.1.1',
 
-  'rxJava'                : '2.2.6',
-  'rxAndroid'             : '2.1.0',
-
   'androidx'              : '1.0.0',
   'lifecycle'             : '2.0.0',
   'room'                  : '2.0.0',
@@ -42,10 +39,6 @@ ext.deps = [
     'coroutines'          : "org.jetbrains.kotlinx:kotlinx-coroutines-core:${versions.coroutines}",
     'coroutinesAndroid'   : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutinesAndroid}",
   ],
-  'rx': [
-    'rxJava'              : "io.reactivex.rxjava2:rxjava:${versions.rxJava}",
-    'rxAndroid'           : "io.reactivex.rxjava2:rxandroid:${versions.rxAndroid}"
-  ],
   'modules': [
     'wordlistApi'         : ":wordlist-api",
     'wordlistDB'          : ":wordlist-db",
@@ -70,10 +63,6 @@ ext.depsPack = [
     ext.deps.androidx.appcompat,
     ext.deps.androidx.recyclerView,
     ext.deps.androidx.constraintLayout,
-  ],
-  rx: [
-    ext.deps.rx.rxJava,
-    ext.deps.rx.rxAndroid
   ],
   coroutines: [
     ext.deps.kotlin.coroutines,

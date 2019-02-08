@@ -35,6 +35,8 @@ dependencies {
   implementation deps.androidx.appcompat
   implementation deps.androidMaterial
 
+  implementation depsPack.coroutines
+
   testImplementation deps.test.junit
   androidTestImplementation depsPack.androidTest
 }

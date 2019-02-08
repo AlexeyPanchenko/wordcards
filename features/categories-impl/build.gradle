@@ -45,7 +45,6 @@ dependencies {
   implementation deps.androidx.constraintLayout
   implementation deps.androidMaterial
 
-  implementation depsPack.rx
   implementation depsPack.coroutines
 
   testImplementation deps.test.junit

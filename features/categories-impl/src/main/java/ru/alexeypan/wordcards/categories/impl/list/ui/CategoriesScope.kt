@@ -2,6 +2,7 @@ package ru.alexeypan.wordcards.categories.impl.list.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import ru.alexeypan.wordcards.core.db.scope.DBScope
+import ru.alexeypan.wordcards.core.ui.coroutines.DispatcherProvider
 import ru.alexeypan.wordcards.core.ui.toaster.AndroidToaster
 import ru.alexeypan.wordcards.core.ui.toaster.Toaster
 import ru.alexeypan.wordcards.injector.Injector
@@ -37,7 +38,8 @@ class CategoriesScope(private val activity: AppCompatActivity) : Scope {
 
 class CategoriesPresenterScope(
   private val dbScope: DBScope,
-  private val categoryMapper: CategoryMapper
+  private val categoryMapper: CategoryMapper,
+  private val dispatcherProvider: DispatcherProvider
 ): Scope {
 
   private var presenter: CategoriesPresenter? = null
@@ -49,7 +51,7 @@ class CategoriesPresenterScope(
 
   override fun open() {
     if (presenter == null) {
-      presenter = CategoriesPresenter(dbScope.appDatabase().categoriesDao(), categoryMapper)
+      presenter = CategoriesPresenter(dbScope.appDatabase().categoriesDao(), categoryMapper, dispatcherProvider)
     }
   }
 

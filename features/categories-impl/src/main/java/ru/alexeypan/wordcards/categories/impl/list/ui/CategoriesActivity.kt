@@ -15,6 +15,7 @@ import ru.alexeypan.wordcards.categories.impl.list.ui.adapter.CategoriesProvider
 import ru.alexeypan.wordcards.categories.impl.list.ui.drag.DragItemTouchHelperCallback
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.core.ui.BaseActivity
+import ru.alexeypan.wordcards.core.ui.coroutines.BaseDispatcherProvider
 import ru.alexeypan.wordcards.injector.Injector
 
 class CategoriesActivity : BaseActivity(), CategoriesView {
@@ -72,7 +73,7 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
     categoriesScope = Injector.openScope(CategoriesScope::class.java, CategoriesScope(this), true)
     presenterScope = Injector.openScope(
       CategoriesPresenterScope::class.java,
-      CategoriesPresenterScope(Injector.openScope(DBScope::class.java), CategoryMapper())
+      CategoriesPresenterScope(Injector.openScope(DBScope::class.java), CategoryMapper(), BaseDispatcherProvider())
     )
   }
 
