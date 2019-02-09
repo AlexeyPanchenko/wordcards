@@ -4,7 +4,7 @@ import android.app.Application
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.injector.Injector
 import ru.alexeypan.wordcards.wordlist.api.WordListScope
-import ru.alexeypan.wordcards.wordlist.impl.di.scope.WordListScopeImpl
+import ru.alexeypan.wordcards.wordlist.impl.outside.scope.WordListScopeImpl
 
 class App : Application() {
 

@@ -1,4 +1,4 @@
-package ru.alexeypan.wordcards.wordlist.impl.di.scope
+package ru.alexeypan.wordcards.wordlist.impl.outside.scope
 
 import androidx.appcompat.app.AppCompatActivity
 import ru.alexeypan.wordcards.wordlist.api.WordListModule

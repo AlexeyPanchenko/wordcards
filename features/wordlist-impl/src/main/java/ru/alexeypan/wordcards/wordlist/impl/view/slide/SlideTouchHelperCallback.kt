@@ -7,9 +7,17 @@ import androidx.recyclerview.widget.RecyclerView
 class SlideTouchHelperCallback : ItemTouchHelper.Callback() {
 
   /** Callback for onSwiped event. */
-  var onSlideEndCallback: ((viewHolder: RecyclerView.ViewHolder, direction: SlideDirection) -> Unit)? = null
+  private var onSlideEndCallback: ((viewHolder: RecyclerView.ViewHolder, direction: SlideDirection) -> Unit)? = null
   /** Callback for each onSwipe event, when item is swiping. */
-  var onSlideCallback: ((viewHolder: RecyclerView.ViewHolder, direction: SlideDirection, ratio: Float) -> Unit)? = null
+  private var onSlideCallback: ((viewHolder: RecyclerView.ViewHolder, direction: SlideDirection, ratio: Float) -> Unit)? = null
+
+  fun setSlideEndCallback(callback: (viewHolder: RecyclerView.ViewHolder, direction: SlideDirection) -> Unit) {
+    onSlideEndCallback = callback
+  }
+
+  fun setSlideCallback(callback: (viewHolder: RecyclerView.ViewHolder, direction: SlideDirection, ratio: Float) -> Unit) {
+    onSlideCallback = callback
+  }
 
   override fun onChildDraw(
     canvas: Canvas,

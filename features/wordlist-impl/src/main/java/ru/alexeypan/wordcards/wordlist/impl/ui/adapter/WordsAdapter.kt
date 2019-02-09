@@ -1,42 +1,29 @@
-package ru.alexeypan.wordcards.wordlist.impl
+package ru.alexeypan.wordcards.wordlist.impl.ui.adapter
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.DecelerateInterpolator
-import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import ru.alexeypan.wordcards.wordlist.impl.R
+import ru.alexeypan.wordcards.wordlist.impl.Word
+import ru.alexeypan.wordcards.wordlist.impl.WordState
 
-class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
+internal class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
 
-  val words = arrayListOf<Word>()
+  private lateinit var wordsProvider: WordsProvider
 
   private var clickListener: ((word: Word, pos: Int) -> Unit)? = null
 
-  fun setItems(list: List<Word>) {
-    words.clear()
-    words.addAll(list)
-    notifyDataSetChanged()
-  }
-
-  fun setListener(listener: (word: Word, pos: Int) -> Unit) {
+  fun setWordClickListener(listener: (word: Word, pos: Int) -> Unit) {
     clickListener = listener
   }
 
-  fun addItem(word: Word) {
-    val position: Int = words.size
-    words.add(word)
-    notifyItemInserted(position)
-  }
-
-  fun removeItem(position: Int) {
-    words.removeAt(position)
-    notifyDataSetChanged()
+  fun setWordsProvider(provider: WordsProvider) {
+    this.wordsProvider = provider
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordHolder {
@@ -44,7 +31,7 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
   }
 
   override fun onBindViewHolder(holder: WordHolder, position: Int) {
-    val word = words[position]
+    val word = wordsProvider.getWords()[holder.adapterPosition]
     holder.wordView.text = if (word.state == WordState.ORIGINAL) word.original else word.translate
 
     val endAnimation = ValueAnimator.ofFloat(-90f, 0f).apply {
@@ -58,7 +45,7 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
       addUpdateListener { animation ->  holder.itemView.rotationY = animation.animatedValue as Float }
       addListener(object : AnimatorListenerAdapter() {
         override fun onAnimationEnd(animation: Animator?) {
-          clickListener?.invoke(word, position)
+          clickListener?.invoke(word, holder.adapterPosition)
           endAnimation.start()
         }
       })
@@ -69,16 +56,10 @@ class WordsAdapter : RecyclerView.Adapter<WordHolder>() {
   }
 
   override fun getItemCount(): Int {
-    return words.size
+    return wordsProvider.getWords().size
   }
 }
 
-class WordHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-  val card: CardView = itemView.findViewById(R.id.cardWord)
-  val wordView: TextView = itemView.findViewById(R.id.tvWord)
-
-  init {
-    val scale = itemView.resources.displayMetrics.density
-    itemView.cameraDistance = 8000 * scale
-  }
+internal interface WordsProvider {
+  fun getWords(): List<Word>
 }

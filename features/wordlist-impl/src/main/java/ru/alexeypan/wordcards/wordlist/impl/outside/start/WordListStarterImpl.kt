@@ -2,7 +2,7 @@ package ru.alexeypan.wordcards.wordlist.impl.outside.start
 
 import androidx.appcompat.app.AppCompatActivity
 import ru.alexeypan.wordcards.wordlist.api.WordListStarter
-import ru.alexeypan.wordcards.wordlist.impl.WordListActivity
+import ru.alexeypan.wordcards.wordlist.impl.ui.WordListActivity
 
 class WordListStarterImpl(
   private val activity: AppCompatActivity

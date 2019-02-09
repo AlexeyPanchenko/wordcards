@@ -47,7 +47,7 @@ class AddWordDialog(
       .setPositiveButton(
         "Добавить",
         { d, _ ->
-          addCallback?.invoke(Word(originalField.text.toString(), translateField.text.toString()))
+          addCallback?.invoke(Word.newWord(originalField.text.toString(), translateField.text.toString()))
           d.dismiss()
         }
       )
