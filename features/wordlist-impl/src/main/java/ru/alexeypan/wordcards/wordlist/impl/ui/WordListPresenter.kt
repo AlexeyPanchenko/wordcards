@@ -57,15 +57,6 @@ class WordListPresenter(
     updateWords()
   }
 
-  override fun onVewDetached() {
-    super.onVewDetached()
-    backgroundScope.launch {
-      val cat = categoriesDao.get(categoryId)
-      cat.wordsCount = wordsDao.getAll(categoryId).size
-      categoriesDao.save(cat)
-    }
-  }
-
   private fun updateWords() {
     if (words.isEmpty()) {
       mainScope.launch {
