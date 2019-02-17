@@ -1,5 +1,10 @@
 package ru.alexeypan.wordcards.wordlist.api
 
 interface WordListStarter {
-  fun start(categoryId: Long)
+
+  companion object {
+    const val UPDATE_CATEGORY = 101
+  }
+
+  fun start(categoryId: Long, requestCode: Int = UPDATE_CATEGORY)
 }

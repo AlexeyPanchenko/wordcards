@@ -53,25 +53,6 @@ class CategoriesPresenter(
     return categories
   }
 
-  private fun updateCategories() {
-    if (categories.isEmpty()) {
-      mainScope.launch {
-        try {
-          val categoryList: List<Category> = withContext(dispatcherProvider.background) {
-            return@withContext categoryMapper.fromDB(categoriesRepository.getCategories())
-          }
-          categories.clear()
-          categories.addAll(categoryList)
-          view?.updateList(categories)
-        } catch (e: Exception) {
-          view?.toaster()?.show("Error")
-        }
-      }
-    } else{
-      view?.updateList(categories)
-    }
-  }
-
   fun onCategoryClicked(category: Category) {
     view?.wordListStarter()?.start(category.id)
   }
@@ -97,4 +78,27 @@ class CategoriesPresenter(
     }
   }
 
+  fun onCategoriesChanged() {
+    categories.clear()
+    updateCategories()
+  }
+
+  private fun updateCategories() {
+    if (categories.isEmpty()) {
+      mainScope.launch {
+        try {
+          val categoryList: List<Category> = withContext(dispatcherProvider.background) {
+            return@withContext categoryMapper.fromDB(categoriesRepository.getCategories())
+          }
+          categories.clear()
+          categories.addAll(categoryList)
+          view?.updateList(categories)
+        } catch (e: Exception) {
+          view?.toaster()?.show("Error")
+        }
+      }
+    } else{
+      view?.updateList(categories)
+    }
+  }
 }

@@ -1,17 +1,20 @@
 package ru.alexeypan.wordcards.wordlist.impl.ui
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.word_list_activity.*
+import ru.alexeypan.wordcards.categories.db.CategoriesDao
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.core.ui.BaseActivity
 import ru.alexeypan.wordcards.core.ui.coroutines.BaseDispatcherProvider
 import ru.alexeypan.wordcards.core.ui.toaster.AndroidToaster
 import ru.alexeypan.wordcards.core.ui.toaster.Toaster
 import ru.alexeypan.wordcards.injector.Injector
+import ru.alexeypan.wordcards.wordlist.db.WordsDao
 import ru.alexeypan.wordcards.wordlist.impl.R
 import ru.alexeypan.wordcards.wordlist.impl.Word
 import ru.alexeypan.wordcards.wordlist.impl.WordMapper
@@ -72,6 +75,11 @@ class WordListActivity : BaseActivity(), WordListView {
     adapter.notifyItemChanged(position, word)
   }
 
+  override fun goToCategories() {
+    setResult(Activity.RESULT_OK)
+    finish()
+  }
+
   override fun toaster(): Toaster = toaster
 
   override fun onDestroy() {
@@ -84,9 +92,11 @@ class WordListActivity : BaseActivity(), WordListView {
 
   private fun initScopes(categoryId: Long) {
     val dbScope: DBScope = Injector.openScope(DBScope::class.java)
+    val wordsDao: WordsDao = dbScope.appDatabase().wordsDao()
+    val categoriesDao: CategoriesDao = dbScope.appDatabase().categoriesDao()
     presenterScope = Injector.openScope(
       WordsPresenterScope::class.java,
-      WordsPresenterScope(categoryId, dbScope.appDatabase().wordsDao(), WordMapper(), BaseDispatcherProvider())
+      WordsPresenterScope(categoryId, wordsDao, categoriesDao, WordMapper(), BaseDispatcherProvider())
     )
   }
 
@@ -115,5 +125,9 @@ class WordListActivity : BaseActivity(), WordListView {
   private fun initAddWordDialog() {
     dialog = AddWordDialog(this)
     dialog.setListener { word -> presenter.onWordAdded(word) }
+  }
+
+  override fun onBackPressed() {
+    presenter.onBackPressed()
   }
 }

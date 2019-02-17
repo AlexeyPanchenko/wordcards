@@ -1,5 +1,7 @@
 package ru.alexeypan.wordcards.categories.impl.list.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
@@ -71,6 +73,15 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
   override fun toaster(): Toaster = categoriesScope.toaster()
 
   override fun wordListStarter(): WordListStarter = categoriesScope.wordListStarter()
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    super.onActivityResult(requestCode, resultCode, data)
+    if(resultCode == Activity.RESULT_OK) {
+      if(requestCode == WordListStarter.UPDATE_CATEGORY) {
+        presenter.onCategoriesChanged()
+      }
+    }
+  }
 
   override fun onDestroy() {
     super.onDestroy()

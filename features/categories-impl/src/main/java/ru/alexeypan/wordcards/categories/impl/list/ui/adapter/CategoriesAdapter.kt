@@ -32,7 +32,7 @@ internal class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
 
   override fun onBindViewHolder(holder: CategoryVH, position: Int) {
     val category = categoriesProvider.getCategories()[holder.adapterPosition]
-    holder.title.text = category.title
+    holder.title.text = holder.itemView.context.getString(R.string.category_title, category.title, category.wordsCount)
     holder.itemView.setOnClickListener { categoryClickListener?.invoke(category) }
     holder.more.setOnClickListener { moreClickListener?.invoke(it, category, holder.adapterPosition) }
   }
