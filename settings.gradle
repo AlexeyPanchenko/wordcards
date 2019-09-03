@@ -1,19 +1,7 @@
 include ':app', ':buildSrc', ':injector'
 
-include ':wordlist-api'
-project(':wordlist-api').projectDir = new File(rootDir, 'features/wordlist-api')
-
-include ':wordlist-db'
-project(':wordlist-db').projectDir = new File(rootDir, 'features/wordlist-db')
-
 include ':wordlist-impl'
 project(':wordlist-impl').projectDir = new File(rootDir, 'features/wordlist-impl')
-
-include ':categories-api'
-project(':categories-api').projectDir = new File(rootDir, 'features/categories-api')
-
-include ':categories-db'
-project(':categories-db').projectDir = new File(rootDir, 'features/categories-db')
 
 include ':categories-impl'
 project(':categories-impl').projectDir = new File(rootDir, 'features/categories-impl')

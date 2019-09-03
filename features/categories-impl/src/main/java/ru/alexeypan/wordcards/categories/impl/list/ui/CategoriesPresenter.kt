@@ -3,7 +3,6 @@ package ru.alexeypan.wordcards.categories.impl.list.ui
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.alexeypan.wordcards.categories.impl.Category
-import ru.alexeypan.wordcards.categories.impl.CategoryMapper
 import ru.alexeypan.wordcards.categories.impl.data.CategoriesRepository
 import ru.alexeypan.wordcards.core.ui.coroutines.DispatcherProvider
 import ru.alexeypan.wordcards.core.ui.mvp.BasePresenter
@@ -11,7 +10,6 @@ import ru.alexeypan.wordcards.core.ui.utils.CollectionUtils
 
 class CategoriesPresenter(
   private val categoriesRepository: CategoriesRepository,
-  private val categoryMapper: CategoryMapper,
   dispatcherProvider: DispatcherProvider
 ) : BasePresenter<CategoriesView>(dispatcherProvider) {
 
@@ -29,7 +27,7 @@ class CategoriesPresenter(
   fun onDeleteClicked(category: Category, position: Int) {
     categories.removeAt(position)
     backgroundScope.launch {
-      categoriesRepository.remove(category.id)
+      categoriesRepository.remove(category)
     }
     view?.removeCategoryFromList(position)
   }
@@ -45,16 +43,12 @@ class CategoriesPresenter(
   fun onItemDropped(fromPosition: Int, toPosition: Int) {
     backgroundScope.launch {
       CollectionUtils.moveItem(categories, fromPosition, toPosition)
-      categoriesRepository.save(categoryMapper.toDB(categories))
+      categoriesRepository.save(categories)
     }
   }
 
   fun provideCategories(): List<Category> {
     return categories
-  }
-
-  fun onCategoryClicked(category: Category) {
-    view?.wordListStarter()?.start(category.id)
   }
 
   fun onCategoryEdited(category: Category, position: Int?) {
@@ -64,14 +58,13 @@ class CategoriesPresenter(
     }
     val correctPosition: Int = position ?: categories.size
     mainScope.launch {
-      val id: Long = withContext(dispatcherProvider.background) {
-        return@withContext categoriesRepository.save(categoryMapper.toDB(category, correctPosition))
+      withContext(dispatcherProvider.background) {
+        return@withContext categoriesRepository.save(category)
       }
 
       if (category.existsId()) {
         categories.set(correctPosition, category)
       } else {
-        category.id = id
         categories.add(category)
       }
       view?.updateCategory(category, correctPosition)
@@ -88,7 +81,7 @@ class CategoriesPresenter(
       mainScope.launch {
         try {
           val categoryList: List<Category> = withContext(dispatcherProvider.background) {
-            return@withContext categoryMapper.fromDB(categoriesRepository.getCategories())
+            return@withContext categoriesRepository.getCategories()
           }
           categories.clear()
           categories.addAll(categoryList)
@@ -97,7 +90,7 @@ class CategoriesPresenter(
           view?.toaster()?.show("Error")
         }
       }
-    } else{
+    } else {
       view?.updateList(categories)
     }
   }

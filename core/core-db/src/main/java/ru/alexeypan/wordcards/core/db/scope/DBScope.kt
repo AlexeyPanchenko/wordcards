@@ -1,28 +1,14 @@
 package ru.alexeypan.wordcards.core.db.scope
 
 import android.content.Context
+import androidx.room.Room
+import ru.alexeypan.wordcards.core.db.APP_DATABASE_NAME
 import ru.alexeypan.wordcards.core.db.AppDatabase
-import ru.alexeypan.wordcards.core.db.AppDatabaseImpl
 import ru.alexeypan.wordcards.injector.Scope
 
-class DBScope(private val context: Context) : Scope {
+class DBScope(context: Context) : Scope {
 
-  private var appDatabase: AppDatabase? = null
-
-  override fun open() {
-    if (appDatabase == null) {
-      appDatabase = AppDatabaseImpl.getInstance(context)
-    }
-  }
-
-  override fun close() {
-    AppDatabaseImpl.destroyInstance()
-  }
-
-  fun appDatabase(): AppDatabase {
-    if (appDatabase == null) {
-      throw NullPointerException("Database instance is null! You need open scope DBScope.")
-    }
-    return appDatabase!!
-  }
+  val database: AppDatabase = Room.databaseBuilder(context, AppDatabase::class.java, APP_DATABASE_NAME)
+    .allowMainThreadQueries()
+    .build()
 }

@@ -40,11 +40,7 @@ ext.deps = [
     'coroutinesAndroid'   : "org.jetbrains.kotlinx:kotlinx-coroutines-android:${versions.coroutinesAndroid}",
   ],
   'modules': [
-    'wordlistApi'         : ":wordlist-api",
-    'wordlistDB'          : ":wordlist-db",
     'wordlistImpl'        : ":wordlist-impl",
-    'categoriesApi'       : ":categories-api",
-    'categoriesDB'        : ":categories-db",
     'categoriesImpl'      : ":categories-impl",
     'coreUI'              : ":core-ui",
     'coreDB'              : ":core-db",

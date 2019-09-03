@@ -1,42 +1,53 @@
 package ru.alexeypan.wordcards.injector
 
-object Injector {
+import kotlin.reflect.KClass
 
-  private val scopes = HashMap<Class<*>, Scope>()
+class Injector {
 
-  fun <T : Scope> registerScope(key: Class<T>, scope: Scope, overwrite: Boolean = false){
-    if (overwrite) {
-      scopes[key] = scope
-    } else if (!scopes.containsKey(key)) {
-      scopes[key] = scope
+  companion object : SingletonHolder<Injector>({ Injector() }) {
+
+    fun <SCOPE : Scope> get(scopeClass: KClass<SCOPE>) = getInstance().getScope(scopeClass)
+  }
+
+  private val scopes = HashMap<KClass<*>, LazyScope<*>>()
+
+  fun <SCOPE : Scope> getScope(scopeClass: KClass<SCOPE>): SCOPE {
+    val lazyScope: LazyScope<SCOPE> = scopes[scopeClass] as LazyScope<SCOPE>?
+      ?: throw IllegalStateException("Init scope $scopeClass first")
+    return lazyScope.get()
+  }
+
+  fun <SCOPE : Scope> putScope(scopeClass: KClass<SCOPE>, factory: ScopeFactory<SCOPE>) {
+    scopes.put(scopeClass, LazyScope(factory))
+  }
+
+  fun close(scopeClass: KClass<out Scope>) {
+    scopes.get(scopeClass)?.close()
+  }
+}
+
+open class SingletonHolder<out T : Any>(creator: () -> T) {
+
+  private var creator: (() -> T)? = creator
+  @Volatile
+  private var instance: T? = null
+
+  fun getInstance(): T {
+    val localInstance = instance
+    if (localInstance != null) {
+      return localInstance
     }
-  }
 
-  fun <T : Scope> unregisterScope(key: Class<T>){
-    scopes.remove(key)
-  }
-
-  fun <T : Scope> openScope(clazz: Class<T>): T {
-    val scope = scopes[clazz] ?: throw throwNotRegisterException(clazz)
-    scope.open()
-    return scope as T
-  }
-
-  fun <T : Scope> openScope(clazz: Class<T>, scope: Scope, overwrite: Boolean = false): T {
-    registerScope(clazz, scope, overwrite)
-    return openScope(clazz)
-  }
-
-  fun <T : Scope> closeScope(clazz: Class<T>, unregister: Boolean = false): T {
-    val scope = scopes[clazz] ?: throw throwNotRegisterException(clazz)
-    scope.close()
-    if (unregister) {
-      unregisterScope(clazz)
+    synchronized(this) {
+      val syncInstance = instance
+      if (syncInstance != null) {
+        return syncInstance
+      } else {
+        val createdInstance = creator!!.invoke()
+        instance = createdInstance
+        creator = null
+        return createdInstance
+      }
     }
-    return scope as T
-  }
-
-  private fun throwNotRegisterException(clazz: Class<*>): IllegalStateException {
-    return IllegalStateException("Scope ${clazz.name} is not register. Register it in you Application class")
   }
 }

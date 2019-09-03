@@ -71,15 +71,15 @@ android {
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
   implementation deps.kotlin.lib8
-  implementation project(deps.modules.categoriesApi)
   implementation project(deps.modules.categoriesImpl)
-  implementation project(deps.modules.wordlistApi)
   implementation project(deps.modules.wordlistImpl)
   implementation project(deps.modules.coreUI)
   implementation project(deps.modules.coreDB)
   implementation project(deps.modules.injector)
 
   implementation deps.androidx.appcompat
+
+  implementation deps.androidx.room.lib
 
   testImplementation deps.test.junit
   androidTestImplementation depsPack.androidTest

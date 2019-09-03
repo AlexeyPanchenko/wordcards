@@ -5,16 +5,16 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Category(
-  var id: Long,
   var title: String,
+  var position: Int = NO_POSITION,
   var image: String? = null,
   var wordsCount: Int = 0
 ) : Parcelable {
   companion object {
-    const val NO_ID: Long = -1
+    private const val NO_POSITION: Int = -1
 
-    fun newCategory(): Category = Category(NO_ID, "")
+    fun newCategory(): Category = Category("")
   }
 
-  fun existsId(): Boolean = id != NO_ID
+  fun existsId(): Boolean = position != NO_POSITION
 }

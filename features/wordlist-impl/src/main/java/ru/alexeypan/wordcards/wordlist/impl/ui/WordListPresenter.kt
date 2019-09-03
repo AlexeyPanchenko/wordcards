@@ -2,20 +2,15 @@ package ru.alexeypan.wordcards.wordlist.impl.ui
 
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.alexeypan.wordcards.categories.db.CategoriesDao
 import ru.alexeypan.wordcards.core.ui.coroutines.DispatcherProvider
 import ru.alexeypan.wordcards.core.ui.mvp.BasePresenter
-import ru.alexeypan.wordcards.wordlist.db.WordDB
-import ru.alexeypan.wordcards.wordlist.db.WordsDao
 import ru.alexeypan.wordcards.wordlist.impl.Word
-import ru.alexeypan.wordcards.wordlist.impl.WordMapper
+import ru.alexeypan.wordcards.wordlist.impl.dependencies.WordsStorage
 import ru.alexeypan.wordcards.wordlist.impl.view.slide.SlideDirection
 
 class WordListPresenter(
-  private val categoryId: Long,
-  private val wordsDao: WordsDao,
-  private val categoriesDao: CategoriesDao,
-  private val wordMapper: WordMapper,
+  private val categoryTitle: String,
+  private val wordsStorage: WordsStorage,
   dispatcherProvider: DispatcherProvider
 ) : BasePresenter<WordListView>(dispatcherProvider) {
 
@@ -32,8 +27,7 @@ class WordListPresenter(
   fun onWordAdded(word: Word) {
     words.add(word)
     backgroundScope.launch {
-      wordsDao.save(wordMapper.toDB(categoryId, word))
-      categoriesDao.save(categoriesDao.get(categoryId).apply { wordsCount ++ })
+      wordsStorage.save(word, categoryTitle)
     }
     view?.addCard(words.size)
   }
@@ -62,9 +56,7 @@ class WordListPresenter(
       mainScope.launch {
         try {
           val wordsList: List<Word> = withContext(dispatcherProvider.background) {
-            val wordsDB: List<WordDB> = wordsDao.getAll(categoryId)
-            categoriesDao.save(categoriesDao.get(categoryId).apply { wordsCount = wordsDB.size })
-            return@withContext wordMapper.fromDB(wordsDB)
+            return@withContext wordsStorage.getAll(categoryTitle)
           }
           words.clear()
           words.addAll(wordsList)

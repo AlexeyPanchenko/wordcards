@@ -3,7 +3,6 @@ package ru.alexeypan.wordcards.categories.impl.list.ui
 import ru.alexeypan.wordcards.categories.impl.Category
 import ru.alexeypan.wordcards.core.ui.mvp.BaseView
 import ru.alexeypan.wordcards.core.ui.toaster.Toaster
-import ru.alexeypan.wordcards.wordlist.api.WordListStarter
 
 interface CategoriesView : BaseView {
   fun updateCategory(category: Category, position: Int)
@@ -12,5 +11,4 @@ interface CategoriesView : BaseView {
   fun openAddCategory(category: Category, position: Int? = null)
   fun moveCategories(fromPosition: Int, toPosition: Int)
   fun toaster(): Toaster
-  fun wordListStarter(): WordListStarter
 }

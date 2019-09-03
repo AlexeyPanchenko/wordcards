@@ -9,21 +9,19 @@ import androidx.appcompat.widget.PopupMenu
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import kotlinx.android.synthetic.main.category_list.*
-import ru.alexeypan.wordcards.categories.db.CategoriesDao
+import ru.alexeypan.wordcards.categories.impl.CategoriesScope
 import ru.alexeypan.wordcards.categories.impl.Category
-import ru.alexeypan.wordcards.categories.impl.CategoryMapper
 import ru.alexeypan.wordcards.categories.impl.R
 import ru.alexeypan.wordcards.categories.impl.add.AddCategoryDialogWidget
 import ru.alexeypan.wordcards.categories.impl.data.CategoriesRepository
 import ru.alexeypan.wordcards.categories.impl.list.ui.adapter.CategoriesAdapter
 import ru.alexeypan.wordcards.categories.impl.list.ui.adapter.CategoriesProvider
 import ru.alexeypan.wordcards.categories.impl.list.ui.drag.DragItemTouchHelperCallback
-import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.core.ui.BaseActivity
 import ru.alexeypan.wordcards.core.ui.coroutines.BaseDispatcherProvider
+import ru.alexeypan.wordcards.core.ui.toaster.AndroidToaster
 import ru.alexeypan.wordcards.core.ui.toaster.Toaster
 import ru.alexeypan.wordcards.injector.Injector
-import ru.alexeypan.wordcards.wordlist.api.WordListStarter
 
 class CategoriesActivity : BaseActivity(), CategoriesView {
 
@@ -31,8 +29,7 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
     private const val COLUMN_COUNT = 3
   }
 
-  private lateinit var presenterScope: CategoriesPresenterScope
-  private lateinit var categoriesScope: CategoriesScope
+  private val categoriesScope = Injector.get(CategoriesScope::class)
 
   private lateinit var adapter: CategoriesAdapter
   private lateinit var presenter: CategoriesPresenter
@@ -41,13 +38,15 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.category_list)
-    initScopes()
     setSupportActionBar(bottomBar)
-    bottomBar.setNavigationOnClickListener {  }
+    bottomBar.setNavigationOnClickListener { }
     initList()
     fabAdd.setOnClickListener { presenter.onAddClicked() }
     initAddCategoryDialog()
-    initPresenter()
+    presenter = CategoriesPresenter(
+      CategoriesRepository(categoriesScope.categoriesStorage), BaseDispatcherProvider()
+    )
+    presenter.onVewAttached(this)
   }
 
   override fun updateCategory(category: Category, position: Int) {
@@ -70,14 +69,12 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
     addCategoryDialogWidget.show(category, position)
   }
 
-  override fun toaster(): Toaster = categoriesScope.toaster()
-
-  override fun wordListStarter(): WordListStarter = categoriesScope.wordListStarter()
+  override fun toaster(): Toaster = AndroidToaster(this)
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    if(resultCode == Activity.RESULT_OK) {
-      if(requestCode == WordListStarter.UPDATE_CATEGORY) {
+    if (resultCode == Activity.RESULT_OK) {
+      if (requestCode == 1) {
         presenter.onCategoriesChanged()
       }
     }
@@ -86,21 +83,11 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
   override fun onDestroy() {
     super.onDestroy()
     presenter.onVewDetached()
-    closeScopes()
-  }
-
-  private fun initScopes() {
-    val categoriesDao: CategoriesDao = Injector.openScope(DBScope::class.java).appDatabase().categoriesDao()
-    categoriesScope = Injector.openScope(CategoriesScope::class.java, CategoriesScope(this), true)
-    presenterScope = Injector.openScope(
-      CategoriesPresenterScope::class.java,
-      CategoriesPresenterScope(CategoriesRepository(categoriesDao), CategoryMapper(), BaseDispatcherProvider())
-    )
   }
 
   private fun initList() {
     adapter = CategoriesAdapter()
-    adapter.setCategoryClickListener { presenter.onCategoryClicked(it) }
+    adapter.setCategoryClickListener { categoriesScope.outRoute.openWords(this, it.title) }
     adapter.setMoreClickListener { view, category, position -> showPopupDialog(view, category, position) }
     adapter.setCategoriesProvider(object : CategoriesProvider {
       override fun getCategories(): List<Category> {
@@ -141,17 +128,4 @@ class CategoriesActivity : BaseActivity(), CategoriesView {
     }
     addCategoryDialogWidget.revival()
   }
-
-  private fun initPresenter() {
-    presenter = presenterScope.presenter()
-    presenter.onVewAttached(this)
-  }
-
-  private fun closeScopes() {
-    Injector.closeScope(CategoriesScope::class.java, true)
-    if (isFinishing) {
-      Injector.closeScope(CategoriesPresenterScope::class.java, true)
-    }
-  }
-
 }
