@@ -1,8 +1,13 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="ru.alexeypan.wordcards.categories">
+<manifest
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="ru.alexeypan.wordcards.categories"
+  >
 
   <application>
-    <activity android:name=".list.ui.CategoriesActivity">
+    <activity
+      android:name=".list.ui.CategoriesActivity"
+      android:screenOrientation="${screenOrientation}"
+      >
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
         <category android:name="android.intent.category.LAUNCHER" />

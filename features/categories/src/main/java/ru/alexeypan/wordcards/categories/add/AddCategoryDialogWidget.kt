@@ -44,7 +44,7 @@ class AddCategoryDialogWidget(
   }
 
   fun show(category: Category, position: Int? = null) {
-    categoryProp.put(category)
+    categoryProp.put(category.copy())
     positionProp.put(position)
     dialogWidget.show()
   }
@@ -53,7 +53,7 @@ class AddCategoryDialogWidget(
 
   override fun create(): Dialog {
     val dialog = BottomSheetDialog(context, R.style.BottomSheetDialog)
-    val view = LayoutInflater.from(context).inflate(R.layout.add_category_dialog, null)
+    val view = LayoutInflater.from(context).inflate(R.layout.categories_add_dialog, null)
     val categoryField = view.findViewById<EditText>(R.id.etCategory)
     val closeButton = view.findViewById<ImageView>(R.id.ivClose)
     val readyButton = view.findViewById<TextView>(R.id.tvReady)

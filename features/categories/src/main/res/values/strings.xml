@@ -1,5 +1,5 @@
 <resources>
-  <string name="category_title">%s\n(%d)</string>
+  <string name="categories_title">%s\n(%d)</string>
 
   <string name="categories_add_new_title">Новая категория</string>
   <string name="categories_add_new_ready">ГОТОВО</string>

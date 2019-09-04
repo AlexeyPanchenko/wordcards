@@ -4,13 +4,13 @@
   <item
     android:id="@+id/menuEdit"
     android:title="Редактировать"
-    android:icon="@drawable/ic_edit"
+    android:icon="@drawable/categories_ic_edit"
     />
 
   <item
     android:id="@+id/menuDelete"
     android:title="Удалить"
-    android:icon="@drawable/ic_delete"
+    android:icon="@drawable/categories_ic_delete"
     />
 
 </menu>

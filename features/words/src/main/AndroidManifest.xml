@@ -1,8 +1,12 @@
 <manifest
-  package="ru.alexeypan.wordcards.words"
   xmlns:android="http://schemas.android.com/apk/res/android"
+  package="ru.alexeypan.wordcards.words"
   >
+
   <application>
-    <activity android:name="ru.alexeypan.wordcards.words.ui.WordListActivity"/>
+    <activity
+      android:name="ru.alexeypan.wordcards.words.ui.WordListActivity"
+      android:screenOrientation="${screenOrientation}"
+      />
   </application>
 </manifest>

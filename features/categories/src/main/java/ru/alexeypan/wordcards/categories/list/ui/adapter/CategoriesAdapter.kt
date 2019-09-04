@@ -7,6 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.alexeypan.wordcards.categories.Category
 import ru.alexeypan.wordcards.categories.R
 
+internal typealias CategoriesProvider = () -> List<Category>
+
 internal class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
 
   private lateinit var categoriesProvider: CategoriesProvider
@@ -27,21 +29,17 @@ internal class CategoriesAdapter : RecyclerView.Adapter<CategoryVH>() {
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryVH {
-    return CategoryVH(LayoutInflater.from(parent.context).inflate(R.layout.category_item, parent, false))
+    return CategoryVH(LayoutInflater.from(parent.context).inflate(R.layout.categories_item, parent, false))
   }
 
   override fun onBindViewHolder(holder: CategoryVH, position: Int) {
-    val category = categoriesProvider.getCategories()[holder.adapterPosition]
-    holder.title.text = holder.itemView.context.getString(R.string.category_title, category.title, category.wordsCount)
+    val category = categoriesProvider.invoke()[holder.adapterPosition]
+    holder.title.text = holder.itemView.context.getString(R.string.categories_title, category.title, category.wordsCount)
     holder.itemView.setOnClickListener { categoryClickListener?.invoke(category) }
     holder.more.setOnClickListener { moreClickListener?.invoke(it, category, holder.adapterPosition) }
   }
 
-  override fun getItemCount(): Int = categoriesProvider.getCategories().size
+  override fun getItemCount(): Int = categoriesProvider.invoke().size
 
   override fun onFailedToRecycleView(holder: CategoryVH): Boolean = true
-}
-
-internal interface CategoriesProvider {
-  fun getCategories(): List<Category>
 }

@@ -4,11 +4,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
-class DragItemTouchHelperCallback : ItemTouchHelper.Callback() {
+internal typealias ItemChangePositionListener = (fromPosition: Int, toPosition: Int) -> Unit
 
-  companion object {
-    private const val NO_POSITION = -1
-  }
+private const val NO_POSITION = -1
+
+internal class DragItemTouchHelperCallback : ItemTouchHelper.Callback() {
 
   private var itemDragListener: ((fromPosition: Int, toPosition: Int) -> Unit)? = null
   private var itemDropListener: ((fromPosition: Int, toPosition: Int) -> Unit)? = null
@@ -18,11 +18,11 @@ class DragItemTouchHelperCallback : ItemTouchHelper.Callback() {
   private var fromPosition = NO_POSITION
   private var toPosition = NO_POSITION
 
-  fun setOnItemDragListener(listener: (fromPosition: Int, toPosition: Int) -> Unit) {
+  fun setOnItemDragListener(listener: ItemChangePositionListener) {
     itemDragListener = listener
   }
 
-  fun setOnItemDropListener(listener: (fromPosition: Int, toPosition: Int) -> Unit) {
+  fun setOnItemDropListener(listener: ItemChangePositionListener) {
     itemDropListener = listener
   }
 

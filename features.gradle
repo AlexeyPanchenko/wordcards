@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+android {
+  compileSdkVersion versions.compileSdk
+
+  defaultConfig {
+    minSdkVersion versions.minSdk
+    targetSdkVersion versions.targetSdk
+    versionCode=VERSION_CODE
+    versionName=VERSION_NAME
+
+    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled true
+
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+      manifestPlaceholders = [screenOrientation: "portrait"]
+    }
+    debug {
+      minifyEnabled false
+      versionNameSuffix "-dev"
+
+      manifestPlaceholders = [screenOrientation: "unspecified"]
+    }
+    travis {
+      initWith debug
+      minifyEnabled true
+
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+      manifestPlaceholders = [screenOrientation: "unspecified"]
+    }
+  }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+}
+
+dependencies {
+  implementation deps.kotlin.lib8
+
+  testImplementation deps.test.junit
+}

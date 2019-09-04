@@ -1,32 +1,9 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+apply from: rootProject.file('features.gradle')
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.kotlin.android.extensions'
 
-android {
-  compileSdkVersion versions.compileSdk
-
-  defaultConfig {
-    minSdkVersion versions.minSdk
-    targetSdkVersion versions.targetSdk
-    versionCode=VERSION_CODE
-    versionName=VERSION_NAME
-
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-  }
-
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-    }
-  }
-  android {
-    androidExtensions {
-      experimental = true
-    }
-  }
-}
+android.resourcePrefix 'categories_'
+androidExtensions.experimental = true
 
 dependencies {
   implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -34,7 +11,6 @@ dependencies {
   implementation project(deps.modules.coreUI)
   implementation project(deps.modules.injector)
 
-  implementation deps.kotlin.lib8
   implementation deps.androidx.annotations
   implementation deps.androidx.appcompat
   implementation deps.androidx.recyclerView
@@ -42,7 +18,4 @@ dependencies {
   implementation deps.androidMaterial
 
   implementation depsPack.coroutines
-
-  testImplementation deps.test.junit
-  androidTestImplementation depsPack.androidTest
 }

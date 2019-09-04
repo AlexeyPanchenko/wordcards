@@ -40,11 +40,15 @@ android {
 
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       signingConfig signingConfigs.release
+
+      manifestPlaceholders = [screenOrientation: "portrait"]
     }
     debug {
       minifyEnabled false
       versionNameSuffix "-dev"
       signingConfig signingConfigs.debug
+
+      manifestPlaceholders = [screenOrientation: "unspecified"]
     }
     travis {
       initWith debug
@@ -54,7 +58,7 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       signingConfig signingConfigs.release
 
-      matchingFallbacks = ['release']
+      manifestPlaceholders = [screenOrientation: "unspecified"]
     }
   }
   lintOptions {
