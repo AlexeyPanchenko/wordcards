@@ -1,16 +1,16 @@
 package ru.alexeypan.wordcards.app.categories
 
 import android.app.Activity
-import ru.alexeypan.wordcards.categories.impl.CategoriesScope
-import ru.alexeypan.wordcards.categories.impl.Category
-import ru.alexeypan.wordcards.categories.impl.dependencies.CategoriesOutRoute
-import ru.alexeypan.wordcards.categories.impl.dependencies.CategoriesStorage
+import ru.alexeypan.wordcards.categories.CategoriesScope
+import ru.alexeypan.wordcards.categories.Category
+import ru.alexeypan.wordcards.categories.dependencies.CategoriesOutRoute
+import ru.alexeypan.wordcards.categories.dependencies.CategoriesStorage
 import ru.alexeypan.wordcards.core.db.category.CategoriesDao
 import ru.alexeypan.wordcards.core.db.category.CategoryDB
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.injector.InjectorScopeProvider
 import ru.alexeypan.wordcards.injector.ScopeFactory
-import ru.alexeypan.wordcards.wordlist.impl.WordsScope
+import ru.alexeypan.wordcards.words.WordsScope
 
 class CategoriesScopeFactory : ScopeFactory<CategoriesScope> {
 

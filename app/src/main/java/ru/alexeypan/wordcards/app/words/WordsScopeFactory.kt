@@ -7,9 +7,9 @@ import ru.alexeypan.wordcards.core.db.words.WordDB
 import ru.alexeypan.wordcards.core.db.words.WordsDao
 import ru.alexeypan.wordcards.injector.InjectorScopeProvider
 import ru.alexeypan.wordcards.injector.ScopeFactory
-import ru.alexeypan.wordcards.wordlist.impl.Word
-import ru.alexeypan.wordcards.wordlist.impl.WordsScope
-import ru.alexeypan.wordcards.wordlist.impl.dependencies.WordsStorage
+import ru.alexeypan.wordcards.words.Word
+import ru.alexeypan.wordcards.words.WordsScope
+import ru.alexeypan.wordcards.words.dependencies.WordsStorage
 
 class WordsScopeFactory : ScopeFactory<WordsScope> {
 

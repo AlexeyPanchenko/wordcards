@@ -1,10 +1,10 @@
 include ':app', ':buildSrc', ':injector'
 
-include ':wordlist-impl'
-project(':wordlist-impl').projectDir = new File(rootDir, 'features/wordlist-impl')
+include ':words'
+project(':words').projectDir = new File(rootDir, 'features/words')
 
-include ':categories-impl'
-project(':categories-impl').projectDir = new File(rootDir, 'features/categories-impl')
+include ':categories'
+project(':categories').projectDir = new File(rootDir, 'features/categories')
 
 include ':core-ui'
 project(':core-ui').projectDir = new File(rootDir, 'core/core-ui')
