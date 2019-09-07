@@ -1,13 +1,16 @@
 package ru.alexeypan.wordcards.words
 
 data class Word(
+  val id: Long,
   val original: String,
   val translate: String,
   var state: WordState = WordState.ORIGINAL
 ) {
 
   companion object {
-    fun newWord(original: String, translate: String): Word = Word(original, translate)
+    const val NO_ID = -1L
+
+    fun newWord(original: String, translate: String): Word = Word(NO_ID, original, translate)
   }
 
   fun toggleState(): WordState {

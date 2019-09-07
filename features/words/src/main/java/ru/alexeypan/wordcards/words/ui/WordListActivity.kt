@@ -31,8 +31,8 @@ class WordListActivity : BaseActivity(), WordListView {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.word_list_activity)
-    val categoryId: String? = wordsScope.inRoute.getCategoryTitle(intent)
-    if (categoryId == null) {
+    val categoryId: Long? = wordsScope.inRoute.getCategoryId(intent)
+    if (categoryId == null || categoryId == -1L) {
       finish()
       return
     }

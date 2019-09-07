@@ -20,8 +20,8 @@ class CategoriesScopeFactory : ScopeFactory<CategoriesScope> {
   override fun create(): CategoriesScope {
     return CategoriesScope(
       outRoute = object : CategoriesOutRoute {
-        override fun openWords(activity: Activity, categoryTitle: String) {
-          activity.startActivity(wordsScope.get().inRoute.intent(activity, categoryTitle))
+        override fun openWords(activity: Activity, categoryId: Long) {
+          activity.startActivity(wordsScope.get().inRoute.intent(activity, categoryId))
         }
       },
       categoriesStorage = AppCategoriesStorage(dbScope.get().database.categoriesDao())
@@ -38,31 +38,36 @@ class AppCategoriesStorage(
   }
 
   override fun saveAll(categories: List<Category>) {
-    dao.saveAll(categories.map { it.toDb() })
+    dao.saveAll(categories.mapIndexed { index: Int, category: Category -> category.toDb(index) })
   }
 
-  override fun save(category: Category) {
-    dao.save(category.toDb())
+  override fun add(category: Category, position: Int): Long {
+    return dao.save(category.toDb(position))
   }
 
   override fun remove(category: Category) {
-    dao.remove(category.title)
+    dao.remove(category.id)
   }
 }
 
 private fun CategoryDB.toDomain(): Category {
   return Category(
+    id = id,
     title = title,
     image = image,
     wordsCount = wordsCount
   )
 }
 
-private fun Category.toDb(): CategoryDB {
-  return CategoryDB(
+private fun Category.toDb(position: Int): CategoryDB {
+  val category = CategoryDB(
     title = title,
-    position = 0,
+    position = position,
     image = image,
     wordsCount = wordsCount
   )
+  if (hasId()) {
+    category.id = id
+  }
+  return category
 }

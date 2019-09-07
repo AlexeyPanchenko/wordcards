@@ -28,26 +28,27 @@ class AppWordsStorage(
   private val categoriesDao: CategoriesDao
 ) : WordsStorage {
 
-  override fun save(word: Word, categoryTitle: String) {
-    wordsDao.save(word.toDb(categoryTitle))
-    categoriesDao.save(categoriesDao.get(categoryTitle).apply { wordsCount++ })
+  override fun save(word: Word, categoryId: Long) {
+    wordsDao.save(word.toDb(categoryId))
+    //categoriesDao.save(categoriesDao.get(categoryTitle).apply { wordsCount++ })
   }
 
-  override fun getAll(categoryTitle: String): List<Word> {
-    return wordsDao.getAll(categoryTitle).map { it.toDomain() }
+  override fun getAll(categoryId: Long): List<Word> {
+    return wordsDao.getAll(categoryId).map { it.toDomain() }
   }
 }
 
 private fun WordDB.toDomain(): Word {
   return Word(
+    id = id,
     original = original,
     translate = translate
   )
 }
 
-private fun Word.toDb(categoryTitle: String): WordDB {
+private fun Word.toDb(categoryId: Long): WordDB {
   return WordDB(
-    categoryTitle = categoryTitle,
+    categoryId = categoryId,
     original = original,
     translate = translate
   )

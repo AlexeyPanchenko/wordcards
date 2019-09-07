@@ -9,12 +9,18 @@ import ru.alexeypan.wordcards.core.db.category.CategoryDB.Companion.CATEGORY_TAB
   tableName = CATEGORY_TABLE
 )
 data class CategoryDB(
-  @PrimaryKey @ColumnInfo(name = TITLE, index = true) val title: String,
+  @ColumnInfo(name = TITLE, index = true) val title: String,
   @ColumnInfo(name = POSITION) val position: Int,
   @ColumnInfo(name = IMAGE) val image: String? = null,
   @ColumnInfo(name = WORDS_COUNT) var wordsCount: Int = 0
 ) {
+
+  @ColumnInfo(name = ID)
+  @PrimaryKey(autoGenerate = true)
+  var id: Long = 0
+
   companion object {
+    internal const val ID = "_id"
     internal const val CATEGORY_TABLE = "categories"
     internal const val TITLE = "title"
     internal const val POSITION = "position"

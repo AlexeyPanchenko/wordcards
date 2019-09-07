@@ -8,7 +8,7 @@ class CategoriesRouter(
   private val outRoute: CategoriesOutRoute
 ) {
 
-  fun openWords(categoryTitle: String) {
-    outRoute.openWords(activity, categoryTitle)
+  fun openWords(categoryId: Long) {
+    outRoute.openWords(activity, categoryId)
   }
 }

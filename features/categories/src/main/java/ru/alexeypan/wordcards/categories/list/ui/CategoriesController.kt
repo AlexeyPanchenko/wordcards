@@ -1,14 +1,11 @@
 package ru.alexeypan.wordcards.categories.list.ui
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.alexeypan.wordcards.categories.Category
 import ru.alexeypan.wordcards.categories.add.AddCategoryDialogWidget
 import ru.alexeypan.wordcards.categories.data.CategoriesRepository
 import ru.alexeypan.wordcards.core.ui.coroutines.DispatcherProvider
 import ru.alexeypan.wordcards.core.ui.toaster.AndroidToaster
-import ru.alexeypan.wordcards.core.ui.utils.CollectionUtils
 
 class CategoriesController(
   private val categoriesListWidget: CategoriesListWidget,
@@ -23,40 +20,33 @@ class CategoriesController(
   private val mainScope: CoroutineScope = CoroutineScope(dispatcherProvider.main)
   /** Coroutine Scope for IO Thread  */
   private val backgroundScope: CoroutineScope = CoroutineScope(dispatcherProvider.background)
-  private val categories = arrayListOf<Category>()
 
   init {
     categoriesListWidget.setCategoriesProvider {
-      return@setCategoriesProvider categories
+      return@setCategoriesProvider categoriesRepository.getCategories()
     }
     categoriesListWidget.setAddClickListener {
       addCategoryDialogWidget.show(Category.newCategory())
     }
     categoriesListWidget.setCategoryClickListener { category ->
-      router.openWords(category.title)
+      router.openWords(category.id)
     }
     categoriesListWidget.editClickListener = { category, position ->
       addCategoryDialogWidget.show(category, position)
     }
     categoriesListWidget.removeClickListener = { category, position ->
-      categories.removeAt(position)
-      backgroundScope.launch {
-        categoriesRepository.remove(category)
-      }
+      categoriesRepository.remove(category)
       categoriesListWidget.removeCategory(position)
     }
     categoriesListWidget.setOnItemDropListener { fromPosition, toPosition ->
-      backgroundScope.launch {
-        CollectionUtils.moveItem(categories, fromPosition, toPosition)
-        categoriesRepository.save(categories)
-      }
+      categoriesRepository.move(fromPosition, toPosition)
     }
 
     addCategoryDialogWidget.setAddCategoryListener { category, position ->
       onCategoryEdited(category, position)
     }
     addCategoryDialogWidget.revival()
-    updateCategories()
+    categoriesListWidget.updateList()
   }
 
   private fun onCategoryEdited(category: Category, position: Int?) {
@@ -64,38 +54,15 @@ class CategoriesController(
       toaster.show("Empty")
       return
     }
-    if (categories.contains(category)) {
+    if (categoriesRepository.getCategories().contains(category)) {
       return
     }
-    val correctPosition: Int = position ?: categories.size
-    category.position = correctPosition
-    backgroundScope.launch {
-      categoriesRepository.save(category)
-    }
+    val correctPosition: Int = position ?: categoriesRepository.getCategories().size
     if (position == null) {
-      categories.add(category)
+      categoriesRepository.add(category, correctPosition)
     } else {
-      categories.set(correctPosition, category)
+      categoriesRepository.save(category, correctPosition)
     }
     categoriesListWidget.updateCategory(category, correctPosition)
-  }
-
-  private fun updateCategories() {
-    if (categories.isEmpty()) {
-      mainScope.launch {
-        try {
-          val categoryList: List<Category> = withContext(dispatcherProvider.background) {
-            return@withContext categoriesRepository.getCategories()
-          }
-          categories.clear()
-          categories.addAll(categoryList)
-          categoriesListWidget.updateList()
-        } catch (e: Exception) {
-          toaster.show("Error")
-        }
-      }
-    } else {
-      categoriesListWidget.updateList()
-    }
   }
 }

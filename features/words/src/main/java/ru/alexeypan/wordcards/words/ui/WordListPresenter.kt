@@ -9,7 +9,7 @@ import ru.alexeypan.wordcards.words.dependencies.WordsStorage
 import ru.alexeypan.wordcards.words.view.slide.SlideDirection
 
 class WordListPresenter(
-  private val categoryTitle: String,
+  private val categoryId: Long,
   private val wordsStorage: WordsStorage,
   dispatcherProvider: DispatcherProvider
 ) : BasePresenter<WordListView>(dispatcherProvider) {
@@ -27,7 +27,7 @@ class WordListPresenter(
   fun onWordAdded(word: Word) {
     words.add(word)
     backgroundScope.launch {
-      wordsStorage.save(word, categoryTitle)
+      wordsStorage.save(word, categoryId)
     }
     view?.addCard(words.size)
   }
@@ -56,7 +56,7 @@ class WordListPresenter(
       mainScope.launch {
         try {
           val wordsList: List<Word> = withContext(dispatcherProvider.background) {
-            return@withContext wordsStorage.getAll(categoryTitle)
+            return@withContext wordsStorage.getAll(categoryId)
           }
           words.clear()
           words.addAll(wordsList)

@@ -8,8 +8,11 @@ import androidx.room.Query
 @Dao
 interface WordsDao {
 
-  @Query("SELECT * from ${WordDB.WORDS_TABLE} WHERE ${WordDB.CATEGORY_TITLE} = :categoryTitle")
-  fun getAll(categoryTitle: String): List<WordDB>
+  @Query("SELECT * from ${WordDB.WORDS_TABLE} WHERE ${WordDB.CATEGORY_ID} = :categoryId")
+  fun getAll(categoryId: Long): List<WordDB>
+
+  @Query("SELECT * from ${WordDB.WORDS_TABLE}")
+  fun getAll(): List<WordDB>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun save(category: WordDB)
