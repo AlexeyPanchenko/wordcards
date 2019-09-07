@@ -1,5 +1,8 @@
 package ru.alexeypan.wordcards.categories.list.ui
 
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import ru.alexeypan.wordcards.categories.Category
 import ru.alexeypan.wordcards.categories.add.AddCategoryDialogWidget
 import ru.alexeypan.wordcards.categories.data.CategoriesRepository
@@ -10,8 +13,9 @@ class CategoriesController(
   private val addCategoryDialogWidget: AddCategoryDialogWidget,
   private val router: CategoriesRouter,
   private val toaster: AndroidToaster,
-  private val categoriesRepository: CategoriesRepository
-) {
+  private val categoriesRepository: CategoriesRepository,
+  lifecycle: Lifecycle
+) : DefaultLifecycleObserver {
 
   init {
     categoriesListWidget.setCategoriesProvider {
@@ -38,6 +42,10 @@ class CategoriesController(
       onCategoryEdited(category, position)
     }
     addCategoryDialogWidget.revival()
+    lifecycle.addObserver(this)
+  }
+
+  override fun onResume(owner: LifecycleOwner) {
     categoriesListWidget.updateList()
   }
 

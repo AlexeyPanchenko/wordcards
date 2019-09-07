@@ -7,6 +7,7 @@ import ru.alexeypan.wordcards.categories.dependencies.CategoriesOutRoute
 import ru.alexeypan.wordcards.categories.dependencies.CategoriesStorage
 import ru.alexeypan.wordcards.core.db.category.CategoriesDao
 import ru.alexeypan.wordcards.core.db.category.CategoryDB
+import ru.alexeypan.wordcards.core.db.category.word.CategoryWordDao
 import ru.alexeypan.wordcards.core.db.scope.DBScope
 import ru.alexeypan.wordcards.injector.InjectorScopeProvider
 import ru.alexeypan.wordcards.injector.ScopeFactory
@@ -24,33 +25,40 @@ class CategoriesScopeFactory : ScopeFactory<CategoriesScope> {
           activity.startActivity(wordsScope.get().inRoute.intent(activity, categoryId))
         }
       },
-      categoriesStorage = AppCategoriesStorage(dbScope.get().database.categoriesDao())
+      categoriesStorage = AppCategoriesStorage(
+        dbScope.get().database.categoriesDao(),
+        dbScope.get().database.categoryWordDao()
+      )
     )
   }
 }
 
 class AppCategoriesStorage(
-  private val dao: CategoriesDao
+  private val categoriesDao: CategoriesDao,
+  private val categoryWordDao: CategoryWordDao
 ) : CategoriesStorage {
 
   override fun getAll(): List<Category> {
-    return dao.getAll().map { it.toDomain() }
+    return categoriesDao.getAll().map { category ->
+      val wordCount: Int = categoryWordDao.getWordsCount(category.id)
+      return@map category.toDomain(wordCount)
+    }
   }
 
   override fun saveAll(categories: List<Category>) {
-    dao.saveAll(categories.mapIndexed { index: Int, category: Category -> category.toDb(index) })
+    categoriesDao.saveAll(categories.mapIndexed { index: Int, category: Category -> category.toDb(index) })
   }
 
   override fun add(category: Category, position: Int): Long {
-    return dao.save(category.toDb(position))
+    return categoriesDao.save(category.toDb(position))
   }
 
   override fun remove(category: Category) {
-    dao.remove(category.id)
+    categoriesDao.remove(category.id)
   }
 }
 
-private fun CategoryDB.toDomain(): Category {
+private fun CategoryDB.toDomain(wordsCount: Int): Category {
   return Category(
     id = id,
     title = title,
@@ -63,8 +71,7 @@ private fun Category.toDb(position: Int): CategoryDB {
   val category = CategoryDB(
     title = title,
     position = position,
-    image = image,
-    wordsCount = wordsCount
+    image = image
   )
   if (hasId()) {
     category.id = id

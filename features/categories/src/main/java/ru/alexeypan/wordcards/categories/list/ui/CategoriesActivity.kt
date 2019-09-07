@@ -24,7 +24,8 @@ class CategoriesActivity : BaseActivity() {
       AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle),
       CategoriesRouter(this, categoriesScope.outRoute),
       AndroidToaster(this),
-      categoriesScope.categoriesRepository
+      categoriesScope.categoriesRepository,
+      lifecycle
     )
   }
 }

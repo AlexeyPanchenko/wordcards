@@ -52,4 +52,8 @@ class CategoriesRepository(
     }
   }
 
+  fun clearCache() {
+    categories.clear()
+  }
+
 }

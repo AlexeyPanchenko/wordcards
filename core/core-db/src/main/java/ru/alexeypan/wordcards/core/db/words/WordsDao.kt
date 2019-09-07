@@ -15,7 +15,7 @@ interface WordsDao {
   fun getAll(): List<WordDB>
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun save(category: WordDB)
+  fun upsert(category: WordDB): Long
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun saveAll(category: List<WordDB>)

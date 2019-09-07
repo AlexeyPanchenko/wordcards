@@ -41,7 +41,7 @@ class WordListActivity : BaseActivity(), WordListView {
     initAddWordDialog()
     toaster = AndroidToaster(this)
     fabAdd.setOnClickListener { presenter.onAddClicked() }
-    presenter = WordListPresenter(categoryId, wordsScope.wordsStorage, BaseDispatcherProvider())
+    presenter = WordListPresenter(categoryId, wordsScope.wordsStorage, BaseDispatcherProvider(), wordsScope.categoryCacheCleaner)
     presenter.onVewAttached(this)
   }
 
