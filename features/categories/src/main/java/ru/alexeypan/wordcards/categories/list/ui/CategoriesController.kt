@@ -1,10 +1,8 @@
 package ru.alexeypan.wordcards.categories.list.ui
 
-import kotlinx.coroutines.CoroutineScope
 import ru.alexeypan.wordcards.categories.Category
 import ru.alexeypan.wordcards.categories.add.AddCategoryDialogWidget
 import ru.alexeypan.wordcards.categories.data.CategoriesRepository
-import ru.alexeypan.wordcards.core.ui.coroutines.DispatcherProvider
 import ru.alexeypan.wordcards.core.ui.toaster.AndroidToaster
 
 class CategoriesController(
@@ -12,14 +10,8 @@ class CategoriesController(
   private val addCategoryDialogWidget: AddCategoryDialogWidget,
   private val router: CategoriesRouter,
   private val toaster: AndroidToaster,
-  private val dispatcherProvider: DispatcherProvider,
   private val categoriesRepository: CategoriesRepository
 ) {
-
-  /** Coroutine Scope for Main Thread  */
-  private val mainScope: CoroutineScope = CoroutineScope(dispatcherProvider.main)
-  /** Coroutine Scope for IO Thread  */
-  private val backgroundScope: CoroutineScope = CoroutineScope(dispatcherProvider.background)
 
   init {
     categoriesListWidget.setCategoriesProvider {

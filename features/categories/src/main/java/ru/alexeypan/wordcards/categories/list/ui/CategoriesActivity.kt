@@ -6,7 +6,6 @@ import ru.alexeypan.wordcards.categories.CategoriesScope
 import ru.alexeypan.wordcards.categories.R
 import ru.alexeypan.wordcards.categories.add.AddCategoryDialogWidget
 import ru.alexeypan.wordcards.core.ui.BaseActivity
-import ru.alexeypan.wordcards.core.ui.coroutines.BaseDispatcherProvider
 import ru.alexeypan.wordcards.core.ui.toaster.AndroidToaster
 import ru.alexeypan.wordcards.injector.Injector
 
@@ -25,7 +24,6 @@ class CategoriesActivity : BaseActivity() {
       AddCategoryDialogWidget(this, stateProvider.stateRegistry("dialog"), lifecycle),
       CategoriesRouter(this, categoriesScope.outRoute),
       AndroidToaster(this),
-      BaseDispatcherProvider(),
       categoriesScope.categoriesRepository
     )
   }
