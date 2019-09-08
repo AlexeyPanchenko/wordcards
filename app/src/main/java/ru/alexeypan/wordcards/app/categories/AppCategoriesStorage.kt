@@ -22,7 +22,7 @@ class AppCategoriesStorage(
   }
 
   override fun saveAll(categories: List<Category>) {
-    categoriesDao.saveAll(categories.mapIndexed { index: Int, category: Category -> category.toDb(index) })
+    categoriesDao.updatePositions(categories.map { it.id })
   }
 
   override fun add(category: Category, position: Int): Long {

@@ -1,28 +1,33 @@
 package ru.alexeypan.wordcards.core.db.category
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
-interface CategoriesDao {
+abstract class CategoriesDao {
 
   @Query("SELECT * FROM ${CategoryDB.CATEGORY_TABLE} ORDER BY ${CategoryDB.POSITION} ASC")
-  fun getAll(): List<CategoryDB>
+  abstract fun getAll(): List<CategoryDB>
 
   @Query("SELECT * FROM ${CategoryDB.CATEGORY_TABLE} WHERE ${CategoryDB.ID} = :categoryId")
-  fun getCategory(categoryId: Long): CategoryDB
+  abstract fun getCategory(categoryId: Long): CategoryDB
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun save(category: CategoryDB): Long
+  abstract fun save(category: CategoryDB): Long
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  fun saveAll(categories: List<CategoryDB>)
+  abstract fun saveAll(categories: List<CategoryDB>)
+
+  @Query("UPDATE ${CategoryDB.CATEGORY_TABLE} SET ${CategoryDB.POSITION} = :position WHERE ${CategoryDB.ID} = :categoryId")
+  abstract fun updatePosition(categoryId: Long, position: Int)
 
   @Query("DELETE FROM ${CategoryDB.CATEGORY_TABLE} WHERE ${CategoryDB.ID} = :id")
-  fun remove(id: Long)
+  abstract fun remove(id: Long)
 
   @Query("DELETE FROM ${CategoryDB.CATEGORY_TABLE}")
-  fun clear()
+  abstract fun clear()
+
+  @Transaction
+  open fun updatePositions(categoryIds: List<Long>) {
+    categoryIds.forEachIndexed { index, categoryId -> updatePosition(categoryId, index) }
+  }
 }
