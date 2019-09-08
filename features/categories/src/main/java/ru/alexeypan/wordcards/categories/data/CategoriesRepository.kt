@@ -52,8 +52,10 @@ class CategoriesRepository(
     }
   }
 
-  fun clearCache() {
-    categories.clear()
+  fun updateCategory(categoryId: Long) {
+    val category: Category = categories.find { it.id == categoryId } ?: return
+    val position: Int = categories.indexOf(category)
+    categories.set(position, storage.get(categoryId))
   }
 
 }

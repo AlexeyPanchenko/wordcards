@@ -5,7 +5,7 @@ import kotlinx.coroutines.withContext
 import ru.alexeypan.wordcards.core.ui.coroutines.DispatcherProvider
 import ru.alexeypan.wordcards.core.ui.mvp.BasePresenter
 import ru.alexeypan.wordcards.words.Word
-import ru.alexeypan.wordcards.words.dependencies.CategoriesCacheCleaner
+import ru.alexeypan.wordcards.words.dependencies.CategoryUpdateListener
 import ru.alexeypan.wordcards.words.dependencies.WordsStorage
 import ru.alexeypan.wordcards.words.view.slide.SlideDirection
 
@@ -13,7 +13,7 @@ class WordListPresenter(
   private val categoryId: Long,
   private val wordsStorage: WordsStorage,
   dispatcherProvider: DispatcherProvider,
-  private val categoryCacheCleaner: CategoriesCacheCleaner
+  private val categoryCacheCleaner: CategoryUpdateListener
 ) : BasePresenter<WordListView>(dispatcherProvider) {
 
   private val words = arrayListOf<Word>()
@@ -28,9 +28,9 @@ class WordListPresenter(
 
   fun onWordAdded(word: Word) {
     words.add(word)
-    categoryCacheCleaner.clear()
     backgroundScope.launch {
       wordsStorage.save(word, categoryId)
+      categoryCacheCleaner.update(categoryId)
     }
     view?.addCard(words.size)
   }

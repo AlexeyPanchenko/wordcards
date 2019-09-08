@@ -11,6 +11,9 @@ interface CategoriesDao {
   @Query("SELECT * FROM ${CategoryDB.CATEGORY_TABLE} ORDER BY ${CategoryDB.POSITION} ASC")
   fun getAll(): List<CategoryDB>
 
+  @Query("SELECT * FROM ${CategoryDB.CATEGORY_TABLE} WHERE ${CategoryDB.ID} = :categoryId")
+  fun getCategory(categoryId: Long): CategoryDB
+
   @Insert(onConflict = OnConflictStrategy.REPLACE)
   fun save(category: CategoryDB): Long
 
