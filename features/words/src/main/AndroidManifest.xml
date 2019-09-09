@@ -8,5 +8,9 @@
       android:name="ru.alexeypan.wordcards.words.ui.WordListActivity"
       android:screenOrientation="${screenOrientation}"
       />
+    <activity
+      android:name=".WordsActivity"
+      android:screenOrientation="${screenOrientation}"
+      />
   </application>
 </manifest>
