@@ -1,6 +1,6 @@
 language: android
 sudo: required
-jdk: openjdk10
+jdk: openjdk12
 
 env:
   global:
