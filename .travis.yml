@@ -1,6 +1,6 @@
 language: android
 sudo: required
-jdk: openjdk12
+jdk: oraclejdk8
 
 env:
   global:
@@ -19,8 +19,7 @@ cache:
 android:
   components:
     - tools
-    - tools
-    - build-tools-28.0.3
+#    - build-tools-28.0.3
     - android-$ANDROID_API
     #- sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
 
@@ -38,12 +37,12 @@ branches:
 #  - yes | sdkmanager "platforms;android-$ANDROID_API"
 
 script:
-  - sonar-scanner
-  - ./gradlew clean assembleTravis --stacktrace
-  - ./gradlew test
+#  - sonar-scanner
+  - ./gradlew clean assembleTravis
+#  - ./gradlew test
 
-addons:
-  sonarcloud:
-    organization: "alexeypanchenko-github"
-    token:
-      secure: ${SONAR_TOKEN}
+#addons:
+#  sonarcloud:
+#    organization: "alexeypanchenko-github"
+#    token:
+#      secure: ${SONAR_TOKEN}
