@@ -1,6 +1,6 @@
 language: android
 sudo: required
-jdk: oraclejdk8
+jdk: openjdk11
 
 env:
   global:
@@ -26,7 +26,7 @@ android:
 
 branches:
   only:
-    - master
+    - travis_test
 
 #before_script:
 #  - echo no | android create avd --force -n test -t android-22--abi armeabi-v7a
